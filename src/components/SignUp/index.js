@@ -17,6 +17,7 @@ const INITIAL_STATE = {
   passwordOne: "",
   passwordTwo: "",
   error: null,
+  role: "user",
 };
 
 class SignUpFormBase extends Component {
@@ -26,13 +27,13 @@ class SignUpFormBase extends Component {
   }
 
   onSubmit = (e) => {
-    const { username, email, passwordOne } = this.state;
+    const { username, email, passwordOne, role } = this.state;
     this.props.firebase
       .doCreateUserWithEmailAndPassword(email, passwordOne)
       .then((authUser) => {
         return this.props.firebase
           .user(authUser.user.uid)
-          .set({ username, email });
+          .set({ username, email, role });
       })
       .then(() => {
         this.setState({ ...INITIAL_STATE });
@@ -48,9 +49,7 @@ class SignUpFormBase extends Component {
   onChange = (e) => {
     this.setState({ [e.target.name]: e.target.value });
   };
-  componentDidMount() {
-    console.log(this.props);
-  }
+
   render() {
     const { username, email, passwordOne, passwordTwo, error } = this.state;
     const isInvalid =

@@ -7,7 +7,7 @@ import SignInPage from "../SignIn";
 import Bookings from "../Bookings";
 import MyBookings from "../MyBookings";
 import SignUpPage from "../SignUp";
-import { withFirebase } from "../Firebase";
+
 import { withAuthentication } from "../Session";
 import PasswordForgetPage from "../PasswordForget";
 import AccountPage from "../Account";

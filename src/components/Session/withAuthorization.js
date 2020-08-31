@@ -8,9 +8,11 @@ import AuthUserContext from "./context";
 const withAuthorization = (condition) => (Component) => {
   class WithAuthorization extends React.Component {
     componentDidMount() {
+      const localUser = JSON.parse(localStorage.getItem("currentUser"));
+      const role = localUser.role === "admin" ? "admin" : "user";
       this.listener = this.props.firebase.auth.onAuthStateChanged(
         (authUser) => {
-          if (!condition(authUser)) {
+          if (!condition(authUser, role)) {
             this.props.history.push(ROUTES.SIGN_IN);
           }
         }

@@ -1,8 +1,7 @@
 import React, { Component } from "react";
 
-import { withFirebase } from "../Firebase";
+import { withAuthorization } from "../Session";
 const UserList = ({ users }) => {
-  console.log(users);
   return (
     <ul>
       {users.map((user) => (
@@ -60,4 +59,8 @@ class AdminPage extends Component {
   }
 }
 
-export default withFirebase(AdminPage);
+const condition = (authUser, role) => {
+  console.log(authUser);
+  console.log(role);
+};
+export default withAuthorization(condition)(AdminPage);
