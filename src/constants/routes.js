@@ -1,0 +1,9 @@
+export const SIGN_IN = "/signin";
+export const SIGN_UP = "/signup";
+export const LOG_OUT = "/logout";
+export const HOME = "/";
+export const BOOKINGS = "/bookings";
+export const MY_BOOKINGS = "/mybookings";
+export const PASSWORD_FORGET = "/passwordforget";
+export const ACCOUNT = "/account";
+export const ADMIN = "/admin";
