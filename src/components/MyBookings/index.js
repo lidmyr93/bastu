@@ -1,12 +1,25 @@
 import React from "react";
 import { withAuthorization, AuthUserContext } from "../Session";
+import { withFirebase } from "../Firebase";
+import { compose } from "recompose";
+import UserTimeList from "./UserTimeList";
 
-const MyBookings = () => {
+const MyBookingsPage = () => {
+  
+
   return (
     <AuthUserContext.Consumer>
-      {(authUser) => <div>My Bookings</div>}
+      {(authUser) => (
+        <div>
+          <UserTimeList authUser={authUser}/>
+          
+        </div>
+      )}
     </AuthUserContext.Consumer>
   );
 };
 const condition = (authUser) => !!authUser;
-export default withAuthorization(condition)(MyBookings);
+const MyBookings = compose(withAuthorization(condition))(MyBookingsPage)
+export default MyBookings;
+
+

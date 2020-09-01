@@ -7,7 +7,7 @@ const ScheduleBase = ({ firebase, syncedDate }) => {
   const [loading, setLoading] = useState(false);
 
   const getSchedule = () => {
-    console.log("called");
+    
     setLoading(true);
     if (syncedDate) {
       firebase.times(syncedDate).on("value", (snapshot) => {

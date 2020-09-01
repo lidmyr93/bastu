@@ -4,9 +4,9 @@ import { compose } from "recompose";
 import { withFirebase } from "../Firebase";
 import { withRouter } from "react-router-dom";
 
+//TODO: keep track of what times are booked for that and disable the option to book it
 const TimeBookingBase = ({ authUser, firebase, syncedDate, setDate }) => {
   const [time, setTime] = useState("");
-
   const handleChange = (e) => {
     setTime(JSON.parse(e.target.value));
   };
@@ -20,6 +20,10 @@ const TimeBookingBase = ({ authUser, firebase, syncedDate, setDate }) => {
       date: syncedDate,
       time: time,
       user: authUser,
+    });
+    firebase.timeToUser(authUser.uid).push({
+      date: syncedDate,
+      time: time,
     });
   };
   return (
