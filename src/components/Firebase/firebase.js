@@ -1,6 +1,7 @@
 import app from "firebase/app";
 import "firebase/auth";
 import "firebase/database";
+
 const config = {
   apiKey: process.env.REACT_APP_API_KEY,
   authDomain: process.env.REACT_APP_AUTH_DOMAIN,
@@ -18,31 +19,29 @@ class Firebase {
     this.db = app.database();
   }
   onAuthUserListener = (next, fallback) =>
-  this.auth.onAuthStateChanged(authUser => {
-    if (authUser) {
-      this.user(authUser.uid)
-        .once('value')
-        .then(snapshot => {
-          const dbUser = snapshot.val();
+    this.auth.onAuthStateChanged((authUser) => {
+      if (authUser) {
+        this.user(authUser.uid)
+          .once("value")
+          .then((snapshot) => {
+            const dbUser = snapshot.val();
 
-          
-          if (!dbUser.roles) {
-            dbUser.roles = {};
-          }
+            if (!dbUser.roles) {
+              dbUser.roles = {};
+            }
 
-          
-          authUser = {
-            uid: authUser.uid,
-            email: authUser.email,
-            ...dbUser,
-          };
+            authUser = {
+              uid: authUser.uid,
+              email: authUser.email,
+              ...dbUser,
+            };
 
-          next(authUser);
-        });
-    } else {
-      fallback();
-    }
-  });
+            next(authUser);
+          });
+      } else {
+        fallback();
+      }
+    });
   doCreateUserWithEmailAndPassword = (email, password) =>
     this.auth.createUserWithEmailAndPassword(email, password);
 
@@ -60,7 +59,9 @@ class Firebase {
 
   users = () => this.db.ref("users");
 
-  bookTime = () => this.db.ref("schedule");
+  bookTime = (date, uid) => this.db.ref(`schedule/${date}/${uid}`);
+
+  times = (date) => this.db.ref(`schedule/${date}`);
 }
 
 export default Firebase;
