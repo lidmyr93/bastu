@@ -12,12 +12,15 @@ import { withAuthentication } from "../Session";
 import PasswordForgetPage from "../PasswordForget";
 import AccountPage from "../Account";
 import AdminPage from "../Admin";
+import { Container } from "@material-ui/core";
 const App = (props) => {
   return (
     <div>
       <Router>
-        <div>
+        
+
           <Navigation />
+          <Container maxWidth="sm">
 
           <hr />
           <Route exact path={ROUTES.HOME} component={HomePage} />
@@ -29,7 +32,8 @@ const App = (props) => {
           <Route path={ROUTES.MY_BOOKINGS} component={MyBookings} />
           <Route path={ROUTES.ACCOUNT} component={AccountPage} />
           <Route path={ROUTES.ADMIN} component={AdminPage} />
-        </div>
+          </Container>
+        
       </Router>
     </div>
   );

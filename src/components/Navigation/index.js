@@ -1,53 +1,182 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
 import * as ROUTES from "../../constants/routes";
-import * as ROLES from "../../constants/roles"
+import * as ROLES from "../../constants/roles";
 import SignOut from "../SignOut";
 import { AuthUserContext } from "../Session";
+import { AppBar, Toolbar, Typography } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
+import Drawer from "@material-ui/core/Drawer";
 
-const Navigation = () => (
-  <div>
-    <AuthUserContext.Consumer>
-      {(authUser) => (authUser ? <NavigationAuth authUser={authUser}/> : <NavigationNonAuth />)}
-    </AuthUserContext.Consumer>
-  </div>
-);
-const NavigationAuth = ({authUser}) => (
-  <ul>
-    <li>
-      <Link to={ROUTES.HOME}>Hem</Link>
-    </li>
+import List from "@material-ui/core/List";
 
-    <li>
-      <SignOut />
-    </li>
-    <li>
-      <Link to={ROUTES.BOOKINGS}>Boka tid</Link>
-    </li>
-    <li>
-      <Link to={ROUTES.MY_BOOKINGS}>Mina tider</Link>
-    </li>
-    <li>
-      <Link to={ROUTES.ACCOUNT}>Konto</Link>
-    </li>
-    {!!authUser.roles[ROLES.ADMIN] && <li>
-      <Link to={ROUTES.ADMIN}>Admin</Link>
-    </li>}
-  </ul>
+import Divider from "@material-ui/core/Divider";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
+import ListItemText from "@material-ui/core/ListItemText";
+import { Menu, MenuOpen, Home, Schedule, KeyboardTab, AccountCircle, Autorenew, CalendarToday, Security } from "@material-ui/icons";
+
+const drawerWidth = 240;
+const useStyles = makeStyles((theme) => ({
+  root: {
+    display: "flex",
+  },
+  appBar: {
+    position: "relative",
+    zIndex: 1400,
+  },
+  drawer: {
+    width: drawerWidth,
+    flexShrink: 0,
+  },
+  drawerPaper: {
+    width: drawerWidth,
+  },
+  drawerContainer: {
+    overflow: "auto",
+  },
+  toggleContainer: {
+    marginRight: "1rem" 
+  }
+}));
+
+const Navigation = () => {
+  const classes = useStyles();
+  const [open, setOpen] = useState(false);
+  const toggleDrawer = (open) => (event) => {
+    if (
+      event.type === "keydown" &&
+      (event.key === "Tab" || event.key === "Shift")
+    ) {
+      return;
+    }
+    setOpen(open);
+  };
+  return (
+    <div>
+      <AppBar position="fixed" className={classes.appBar}>
+        <Toolbar>
+          {open ? (
+            <MenuOpen onClick={toggleDrawer(false)} className={classes.toggleContainer}/>
+          ) : (
+            <Menu onClick={toggleDrawer(true)} className={classes.toggleContainer}/>
+          )}
+          <Typography variant="h6" nowrap>Bastu - Norra Oxhalsö</Typography>
+        </Toolbar>
+          </AppBar>
+        
+          <Drawer
+            className={classes.drawer}
+            open={open}
+            classes={{
+              paper: classes.drawerPaper,
+            }}
+            onClose={toggleDrawer(false)}
+          >
+            <Toolbar />
+            <div className={classes.drawerContainer}>
+              <AuthUserContext.Consumer>
+                {(authUser) =>
+                  authUser ? (
+                    <NavigationAuth
+                      authUser={authUser}
+                      classes={classes}
+                      open={open}
+                      toggleDrawer={toggleDrawer}
+                    />
+                  ) : (
+                    <NavigationNonAuth
+                      classes={classes}
+                      open={open}
+                      toggleDrawer={toggleDrawer}
+                    />
+                  )
+                }
+              </AuthUserContext.Consumer>
+            </div>
+          </Drawer>
+        
+      
+    </div>
+  );
+};
+const NavigationAuth = ({ authUser, classes, open, toggleDrawer }) => (
+  <>
+    <List>
+      <ListItem button>
+        <ListItemIcon><Home /></ListItemIcon>
+        <ListItemText>
+          <Link to={ROUTES.HOME}>Hem</Link>
+        </ListItemText>
+      </ListItem>
+      <ListItem button>
+        <ListItemIcon><Schedule /></ListItemIcon>
+        <ListItemText>
+          <Link to={ROUTES.BOOKINGS}>Boka tid</Link>
+        </ListItemText>
+      </ListItem>
+      <ListItem button>
+        <ListItemIcon><CalendarToday /></ListItemIcon>
+        <ListItemText>
+          <Link to={ROUTES.MY_BOOKINGS}>Mina Tider</Link>
+        </ListItemText>
+      </ListItem>
+      <ListItem button>
+        <ListItemIcon><AccountCircle /></ListItemIcon>
+        <ListItemText>
+          <Link to={ROUTES.ACCOUNT}>Konto</Link>
+        </ListItemText>
+      </ListItem>
+
+      {!!authUser.roles[ROLES.ADMIN] && (
+        <>
+        <Divider />
+        <ListItem button>
+          <ListItemIcon><Security /></ListItemIcon>
+          <ListItemText>
+            <Link to={ROUTES.ADMIN}>Admin</Link>
+          </ListItemText>
+        </ListItem>
+        </>
+      )}
+    
+
+    
+        <Divider />
+      <ListItem button>
+        <ListItemIcon></ListItemIcon>
+        <ListItemText>
+          <SignOut />
+        </ListItemText>
+      </ListItem>
+    </List>
+  </>
 );
+
 const NavigationNonAuth = () => (
-  <ul>
-    <li>
-      <Link to={ROUTES.HOME}>Hem</Link>
-    </li>
-    <li>
-      <Link to={ROUTES.SIGN_IN}>Sign In</Link>
-    </li>
-    <li>
-      <Link to={ROUTES.PASSWORD_FORGET}>Password forget</Link>
-    </li>
-  </ul>
+  <List>
+    <ListItem button>
+      <ListItemIcon><Home /></ListItemIcon>
+      <ListItemText>
+        <Link to={ROUTES.HOME}>Hem</Link>
+      </ListItemText>
+    </ListItem>
+
+    <ListItem button>
+      <ListItemIcon><KeyboardTab /></ListItemIcon>
+      <ListItemText>
+        <Link to={ROUTES.SIGN_IN}>Sign In</Link>
+      </ListItemText>
+    </ListItem>
+
+    <ListItem button>
+      <ListItemIcon><Autorenew /></ListItemIcon>
+      <ListItemText>
+        <Link to={ROUTES.PASSWORD_FORGET}>Password forget</Link>
+      </ListItemText>
+    </ListItem>
+  </List>
 );
 
 export default Navigation;
