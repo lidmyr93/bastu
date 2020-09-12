@@ -6,14 +6,18 @@ import { SignUpLink } from "../SignUp";
 import { withFirebase } from "../Firebase";
 import * as ROUTES from "../../constants/routes";
 import { PasswordForgetLink } from "../PasswordForget";
+import CustomizedInput from "../Input/Input";
+import { Button } from "@material-ui/core";
+import { FlexContainer, FlexForm } from "../../styles/flex-container";
 
 const SignInPage = () => (
-  <div>
-    <h1>SignIn</h1>
+  <FlexContainer direction="column">
     <SignInForm />
-    <PasswordForgetLink />
-    <SignUpLink />
-  </div>
+    <FlexContainer direction="column" align="flex-start" width="100%">
+      <PasswordForgetLink />
+      <SignUpLink />
+    </FlexContainer>
+  </FlexContainer>
 );
 
 const INITIAL_STATE = {
@@ -61,27 +65,34 @@ class SignInFormBase extends Component {
     const isInvalid = password === "" || email === "";
 
     return (
-      <form onSubmit={this.onSubmit}>
-        <input
+      <FlexForm onSubmit={this.onSubmit}>
+        <CustomizedInput
           name="email"
           value={email}
           onChange={this.onChange}
           type="text"
-          placeholder="Email Address"
+          placeholder="Email address"
         />
-        <input
+        <CustomizedInput
           name="password"
           value={password}
           onChange={this.onChange}
           type="password"
           placeholder="Password"
         />
-        <button disabled={isInvalid} type="submit">
+
+        <Button
+          disabled={isInvalid}
+          type="submit"
+          color="primary"
+          variant="contained"
+          fullWidth
+        >
           Sign In
-        </button>
+        </Button>
 
         {error && <p>{error.message}</p>}
-      </form>
+      </FlexForm>
     );
   }
 }

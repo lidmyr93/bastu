@@ -4,6 +4,7 @@ import { withAuthorization, AuthUserContext } from "../Session";
 import Schedule from "../Schedule";
 import TimeBooking from "./TimeBooking";
 import { getDate } from "../../Utils/date";
+import TimeCard from "../Card/Card";
 const Bookings = () => {
   const [date, setDate] = useState("");
   useEffect(() => {
@@ -20,6 +21,7 @@ const Bookings = () => {
           />
 
           <Schedule syncedDate={date} />
+          <TimeCard date={date}/>
         </div>
       )}
     </AuthUserContext.Consumer>

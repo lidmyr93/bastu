@@ -1,6 +1,9 @@
 import React, { Component } from "react";
 
 import { withFirebase } from "../Firebase";
+import { FlexForm } from "../../styles/flex-container";
+import CustomizedInput from "../Input/Input";
+import { Button } from "@material-ui/core";
 
 const INITIAL_STATE = {
   passwordOne: "",
@@ -40,27 +43,27 @@ class PasswordChangeForm extends Component {
     const isInvalid = passwordOne !== passwordTwo || passwordOne === "";
 
     return (
-      <form onSubmit={this.onSubmit}>
-        <input
+      <FlexForm onSubmit={this.onSubmit}>
+        <CustomizedInput
           name="passwordOne"
           value={passwordOne}
           onChange={this.onChange}
           type="password"
           placeholder="New Password"
         />
-        <input
+        <CustomizedInput
           name="passwordTwo"
           value={passwordTwo}
           onChange={this.onChange}
           type="password"
           placeholder="Confirm New Password"
         />
-        <button disabled={isInvalid} type="submit">
+        <Button disabled={isInvalid} type="submit" color="primary" variant="contained" fullWidth>
           Reset My Password
-        </button>
+        </Button>
 
         {error && <p>{error.message}</p>}
-      </form>
+      </FlexForm>
     );
   }
 }

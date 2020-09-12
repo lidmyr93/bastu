@@ -15,7 +15,17 @@ import Divider from "@material-ui/core/Divider";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
-import { Menu, MenuOpen, Home, Schedule, KeyboardTab, AccountCircle, Autorenew, CalendarToday, Security } from "@material-ui/icons";
+import {
+  Menu,
+  MenuOpen,
+  Home,
+  Schedule,
+  KeyboardTab,
+  AccountCircle,
+  Autorenew,
+  CalendarToday,
+  Security,
+} from "@material-ui/icons";
 
 const drawerWidth = 240;
 const useStyles = makeStyles((theme) => ({
@@ -37,13 +47,14 @@ const useStyles = makeStyles((theme) => ({
     overflow: "auto",
   },
   toggleContainer: {
-    marginRight: "1rem" 
-  }
+    marginRight: "1rem",
+  },
 }));
 
 const Navigation = () => {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
+  console.log(open);
   const toggleDrawer = (open) => (event) => {
     if (
       event.type === "keydown" &&
@@ -53,77 +64,96 @@ const Navigation = () => {
     }
     setOpen(open);
   };
+
+  const handleDrawerClose = () => {
+    console.log("close");
+    setOpen(false)
+  }
   return (
     <div>
       <AppBar position="fixed" className={classes.appBar}>
         <Toolbar>
           {open ? (
-            <MenuOpen onClick={toggleDrawer(false)} className={classes.toggleContainer}/>
+            <MenuOpen
+              onClick={toggleDrawer(false)}
+              className={classes.toggleContainer}
+            />
           ) : (
-            <Menu onClick={toggleDrawer(true)} className={classes.toggleContainer}/>
+            <Menu
+              onClick={toggleDrawer(true)}
+              className={classes.toggleContainer}
+            />
           )}
-          <Typography variant="h6" nowrap>Bastu - Norra Oxhalsö</Typography>
+          <Typography variant="h6" nowrap>
+            Bastu - Norra Oxhalsö
+          </Typography>
         </Toolbar>
-          </AppBar>
-        
-          <Drawer
-            className={classes.drawer}
-            open={open}
-            classes={{
-              paper: classes.drawerPaper,
-            }}
-            onClose={toggleDrawer(false)}
-          >
-            <Toolbar />
-            <div className={classes.drawerContainer}>
-              <AuthUserContext.Consumer>
-                {(authUser) =>
-                  authUser ? (
-                    <NavigationAuth
-                      authUser={authUser}
-                      classes={classes}
-                      open={open}
-                      toggleDrawer={toggleDrawer}
-                    />
-                  ) : (
-                    <NavigationNonAuth
-                      classes={classes}
-                      open={open}
-                      toggleDrawer={toggleDrawer}
-                    />
-                  )
-                }
-              </AuthUserContext.Consumer>
-            </div>
-          </Drawer>
-        
-      
+      </AppBar>
+
+      <Drawer
+        className={classes.drawer}
+        open={open}
+        classes={{
+          paper: classes.drawerPaper,
+        }}
+        onClose={toggleDrawer(false)}
+      >
+        <Toolbar />
+        <div className={classes.drawerContainer}>
+          <AuthUserContext.Consumer>
+            {(authUser) =>
+              authUser ? (
+                <NavigationAuth
+                  authUser={authUser}
+                  classes={classes}
+                  open={open}
+                  handleDrawerClose={handleDrawerClose}
+                />
+              ) : (
+                <NavigationNonAuth
+                  classes={classes}
+                  open={open}
+                  handleDrawerClose={handleDrawerClose}
+                />
+              )
+            }
+          </AuthUserContext.Consumer>
+        </div>
+      </Drawer>
     </div>
   );
 };
-const NavigationAuth = ({ authUser, classes, open, toggleDrawer }) => (
+const NavigationAuth = ({ authUser, classes, handleDrawerClose }) => (
   <>
     <List>
-      <ListItem button>
-        <ListItemIcon><Home /></ListItemIcon>
+      <ListItem button onClick={handleDrawerClose}>
+        <ListItemIcon>
+          <Home />
+        </ListItemIcon>
         <ListItemText>
           <Link to={ROUTES.HOME}>Hem</Link>
         </ListItemText>
       </ListItem>
-      <ListItem button>
-        <ListItemIcon><Schedule /></ListItemIcon>
+      <ListItem button onClick={handleDrawerClose}>
+        <ListItemIcon>
+          <Schedule />
+        </ListItemIcon>
         <ListItemText>
           <Link to={ROUTES.BOOKINGS}>Boka tid</Link>
         </ListItemText>
       </ListItem>
-      <ListItem button>
-        <ListItemIcon><CalendarToday /></ListItemIcon>
+      <ListItem button onClick={handleDrawerClose}>
+        <ListItemIcon>
+          <CalendarToday />
+        </ListItemIcon>
         <ListItemText>
           <Link to={ROUTES.MY_BOOKINGS}>Mina Tider</Link>
         </ListItemText>
       </ListItem>
-      <ListItem button>
-        <ListItemIcon><AccountCircle /></ListItemIcon>
+      <ListItem button onClick={handleDrawerClose}>
+        <ListItemIcon>
+          <AccountCircle />
+        </ListItemIcon>
         <ListItemText>
           <Link to={ROUTES.ACCOUNT}>Konto</Link>
         </ListItemText>
@@ -131,20 +161,20 @@ const NavigationAuth = ({ authUser, classes, open, toggleDrawer }) => (
 
       {!!authUser.roles[ROLES.ADMIN] && (
         <>
-        <Divider />
-        <ListItem button>
-          <ListItemIcon><Security /></ListItemIcon>
-          <ListItemText>
-            <Link to={ROUTES.ADMIN}>Admin</Link>
-          </ListItemText>
-        </ListItem>
+          <Divider />
+          <ListItem button onClick={handleDrawerClose}>
+            <ListItemIcon>
+              <Security />
+            </ListItemIcon>
+            <ListItemText>
+              <Link to={ROUTES.ADMIN}>Admin</Link>
+            </ListItemText>
+          </ListItem>
         </>
       )}
-    
 
-    
-        <Divider />
-      <ListItem button>
+      <Divider />
+      <ListItem button onClick={handleDrawerClose}>
         <ListItemIcon></ListItemIcon>
         <ListItemText>
           <SignOut />
@@ -154,24 +184,30 @@ const NavigationAuth = ({ authUser, classes, open, toggleDrawer }) => (
   </>
 );
 
-const NavigationNonAuth = () => (
+const NavigationNonAuth = ({handleDrawerClose}) => (
   <List>
-    <ListItem button>
-      <ListItemIcon><Home /></ListItemIcon>
+    <ListItem button onClick={handleDrawerClose}>
+      <ListItemIcon>
+        <Home />
+      </ListItemIcon>
       <ListItemText>
         <Link to={ROUTES.HOME}>Hem</Link>
       </ListItemText>
     </ListItem>
 
-    <ListItem button>
-      <ListItemIcon><KeyboardTab /></ListItemIcon>
+    <ListItem button onClick={handleDrawerClose}>
+      <ListItemIcon>
+        <KeyboardTab />
+      </ListItemIcon>
       <ListItemText>
         <Link to={ROUTES.SIGN_IN}>Sign In</Link>
       </ListItemText>
     </ListItem>
 
-    <ListItem button>
-      <ListItemIcon><Autorenew /></ListItemIcon>
+    <ListItem button onClick={handleDrawerClose}>
+      <ListItemIcon>
+        <Autorenew />
+      </ListItemIcon>
       <ListItemText>
         <Link to={ROUTES.PASSWORD_FORGET}>Password forget</Link>
       </ListItemText>

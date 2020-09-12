@@ -4,13 +4,16 @@ import { withFirebase } from "../Firebase";
 import { Link, withRouter } from "react-router-dom";
 import * as ROUTES from "../../constants/routes";
 import * as ROLES from "../../constants/roles";
+import CustomizedInput from "../Input/Input";
+import { Button } from "@material-ui/core";
+import { FlexForm , FlexContainer} from "../../styles/flex-container";
 
 const SignUpPage = () => (
-  <div>
+  <FlexContainer direction="column">
     <h1>SignUp</h1>
 
     <SignUpForm />
-  </div>
+  </FlexContainer>
 );
 const INITIAL_STATE = {
   username: "",
@@ -73,50 +76,52 @@ class SignUpFormBase extends Component {
       email === "" ||
       username === "";
     return (
-      <form onSubmit={this.onSubmit}>
+      <FlexForm onSubmit={this.onSubmit}>
         {" "}
-        <input
+        
+        <CustomizedInput
           name="username"
           value={username}
           onChange={this.onChange}
           type="text"
           placeholder="Full Name"
         />
-        <input
+        <CustomizedInput
           name="email"
           value={email}
           onChange={this.onChange}
           type="text"
           placeholder="Email Address"
         />
-        <input
+        <CustomizedInput
           name="passwordOne"
           value={passwordOne}
           onChange={this.onChange}
           type="password"
           placeholder="Password"
         />
-        <input
+        <CustomizedInput
           name="passwordTwo"
           value={passwordTwo}
           onChange={this.onChange}
           type="password"
           placeholder="Confirm Password"
         />
-        <label>
+        {/* <label>
           Admin:
-          <input
+          <CustomizedInput
             name="isAdmin"
             type="checkbox"
             checked={isAdmin}
             onChange={this.onChangeCheckBox}
           />
-        </label>
-        <button disabled={isInvalid} type="submit">
+        </label> */}
+        <Button disabled={isInvalid} type="submit" color="primary" variant="contained" fullWidth>
           Sign Up
-        </button>
+        </Button>
         {error && <p>{error.message}</p>}
-      </form>
+        
+      </FlexForm>
     );
   }
 }

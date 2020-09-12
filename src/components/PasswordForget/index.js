@@ -3,12 +3,15 @@ import { Link } from "react-router-dom";
 
 import { withFirebase } from "../Firebase";
 import * as ROUTES from "../../constants/routes";
+import { FlexContainer, FlexForm } from "../../styles/flex-container";
+import { Button } from "@material-ui/core";
+import CustomizedInput from "../Input/Input";
 
 const PasswordForgetPage = () => (
-  <div>
+  <FlexContainer direction="column">
     <h1>PasswordForget</h1>
     <PasswordForgetForm />
-  </div>
+  </FlexContainer>
 );
 
 const INITIAL_STATE = {
@@ -48,20 +51,26 @@ class PasswordForgetFormBase extends Component {
     const isInvalid = email === "";
 
     return (
-      <form onSubmit={this.onSubmit}>
-        <input
+      <FlexForm onSubmit={this.onSubmit}>
+        <CustomizedInput
           name="email"
           value={this.state.email}
           onChange={this.onChange}
           type="text"
           placeholder="Email Address"
         />
-        <button disabled={isInvalid} type="submit">
+        <Button
+          disabled={isInvalid}
+          type="submit"
+          color="primary"
+          variant="contained"
+          fullWidth
+        >
           Reset My Password
-        </button>
+        </Button>
 
         {error && <p>{error.message}</p>}
-      </form>
+      </FlexForm>
     );
   }
 }
