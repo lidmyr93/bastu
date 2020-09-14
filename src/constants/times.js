@@ -2,7 +2,7 @@ export const AVAILABLE_TIMES = [
   {
     startTime: "08.00",
     endTime: "09.30",
-    status: "free",
+    status: "open",
     type: "private",
   },
   {

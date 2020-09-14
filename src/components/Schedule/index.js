@@ -2,48 +2,31 @@ import React, { useEffect, useState } from "react";
 import { withFirebase } from "../Firebase";
 import { compose } from "recompose";
 
-const ScheduleBase = ({ firebase, syncedDate }) => {
-  const [scheduelList, setScheduleList] = useState(null);
-  const [loading, setLoading] = useState(false);
+const ScheduleBase = ( {timeList, loading }) => {
+  
 
-  const getSchedule = () => {
-    
-    setLoading(true);
-    if (syncedDate) {
-      firebase.times(syncedDate).on("value", (snapshot) => {
-        const timesObject = snapshot.val();
-        if (!timesObject) return setScheduleList(null);
-        const timesList = Object.keys(timesObject).map((key) => ({
-          ...timesObject[key],
-          bookedBy: key,
-        }));
-        console.log(timesList);
-        setScheduleList(timesList);
-      });
-    }
-    setLoading(false);
-  };
-  useEffect(() => {
-    getSchedule();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [syncedDate]);
+  
+  
   return (
     <div>
-      {!loading && scheduelList && (
+      <p>asdadss</p>
+    
+      {!loading && timeList && timeList.map((item) => 
         <div>
-          {/* item.bookedBy
-                item.time
-                item.user
-                item.date
-            */}
-          {scheduelList.map((item) => (
-            <div key={item.bookedBy}>
-              <span>Bokad av: {item.user.username}</span>
-              <span>
-                Time: {`${item.time.startTime} - ${item.time.endTime}`}
-              </span>
-            </div>
-          ))}
+          <span>{item.startTime}</span>
+          <span>{item.endTime}</span>
+          <span>{item.type}</span>
+          
+          {item.status === Object(item.status) ? 
+          <>
+          <span>{item.status.bookedBy}</span> 
+          <span>{item.status.date}</span> 
+          <span>{item.status.user.email}</span> 
+          <span>{item.status.user.username}</span> 
+          </>
+          : 
+          <span>{item.status}</span>}
+          
         </div>
       )}
       {loading && <div>Loading....</div>}
