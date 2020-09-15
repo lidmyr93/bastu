@@ -2,29 +2,21 @@ import { AVAILABLE_TIMES } from "../constants/times";
 
 const syncLocalTimeListToFirebase = (timelist) => {
   let temp = [];
-  console.log(temp);
-  AVAILABLE_TIMES.forEach((time) => {
-    timelist.forEach((bookedTime) => {
-        console.log(temp);
-      if (
-        time.endTime === bookedTime.time.endTime &&
-        time.startTime === bookedTime.time.startTime
-      ) {
-        temp.push({ ...time, status: bookedTime });
-    } 
-    else {
-        console.log(time)
-        temp.push(time)
-    }
-    });
-    
-  });
+  let x = 0;
   
+  AVAILABLE_TIMES.forEach((time) => {
+    if (timelist[x] && timelist[x].time.startTime === time.startTime) {
+      temp.push({ ...time, status: timelist[x] });
+      x += 1;
+    } else {
+      temp.push(time);
+    }
+  });
   return temp;
 };
 
 export default syncLocalTimeListToFirebase;
 
 
-//TODO: Fixa buggen, den funkar på en entry i timelist
-//men få fort det är mer bokade tider så läggs dubbletter avv  tomma tider till
+//TODO: Look over for a more optimal solution, alternative move this
+//to a firebase function for cleaner frontend

@@ -6,26 +6,10 @@ import { withRouter } from "react-router-dom";
 
 //TODO: keep track of what times are booked for that and disable the option to book it
 const TimeBookingBase = ({ authUser, firebase, syncedDate, setDate }) => {
-  const [time, setTime] = useState("");
-  const handleChange = (e) => {
-    setTime(JSON.parse(e.target.value));
-  };
+  
   const onDateChange = (e) => setDate(e.target.value);
-  useEffect(() => {
-    setTime(AVAILABLE_TIMES[0]);
-  }, []);
-  const onSubmit = () => {
-    console.log(`Tid bokad, ${JSON.stringify(time)}, datum : ${syncedDate}`);
-    firebase.bookTime(syncedDate, authUser.uid).set({
-      date: syncedDate,
-      time: time,
-      user: authUser,
-    });
-    firebase.timeToUser(authUser.uid).push({
-      date: syncedDate,
-      time: time,
-    });
-  };
+  
+  
   return (
     <div
       style={{
@@ -42,16 +26,8 @@ const TimeBookingBase = ({ authUser, firebase, syncedDate, setDate }) => {
         value={syncedDate}
         onChange={(e) => onDateChange(e)}
       />
-      <select onChange={(e) => handleChange(e)}>
-        {AVAILABLE_TIMES.map((time) => (
-          <option
-            value={JSON.stringify(time)}
-            key={time.startTime}
-            disabled={time.type === "general" || time.status === "booked"}
-          >{`${time.startTime}-${time.endTime}`}</option>
-        ))}
-      </select>
-      <button onClick={onSubmit}>Boka tid</button>
+      
+      
     </div>
   );
 };

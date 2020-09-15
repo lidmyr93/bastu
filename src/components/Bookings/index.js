@@ -13,7 +13,22 @@ const BookingsBase = ({ firebase, authUser }) => {
   const [date, setDate] = useState("");
   const [timeList, setTimeList] = useState(null);
   const [loading, setLoading] = useState(false);
+  /* const [time, setTime] = useState(""); */
 
+  const onSubmit = (time) => {
+    setLoading(true)
+    console.log(`Tid bokad, ${JSON.stringify(time)}, datum : ${date}`);
+    firebase.bookTime(date, authUser.uid).set({
+      date: date,
+      time: time,
+      user: authUser,
+    });
+    firebase.timeToUser(authUser.uid).push({
+      date: date,
+      time: time,
+    });
+    setLoading(false)
+  };
   useEffect(() => {
     setDate(getDate);
   }, []);
@@ -44,6 +59,8 @@ const BookingsBase = ({ firebase, authUser }) => {
         syncedDate={date}
         timeList={timeList}
         loading={loading}
+        onSubmit={onSubmit}
+        
       />}
       {/* <TimeCard date={date}/> */}
     </div>
