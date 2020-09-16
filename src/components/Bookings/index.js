@@ -16,7 +16,7 @@ const BookingsBase = ({ firebase, authUser }) => {
   /* const [time, setTime] = useState(""); */
 
   const onSubmit = (time) => {
-    setLoading(true)
+    setLoading(true);
     console.log(`Tid bokad, ${JSON.stringify(time)}, datum : ${date}`);
     firebase.bookTime(date, authUser.uid).set({
       date: date,
@@ -27,22 +27,24 @@ const BookingsBase = ({ firebase, authUser }) => {
       date: date,
       time: time,
     });
-    setLoading(false)
+    setLoading(false);
   };
   useEffect(() => {
-    setDate(getDate);
+    /* setDate(getDate); */
+    setDate("2020-09-01");
   }, []);
   const getSchedule = () => {
     setLoading(true);
     if (date) {
-      firebase.times(date).on("value", (snapshot) => {
+      firebase.times(date).on("value", async (snapshot) => {
         const timesObject = snapshot.val();
         if (!timesObject) return setTimeList(null);
         const timesList = Object.keys(timesObject).map((key) => ({
           ...timesObject[key],
           bookedBy: key,
         }));
-        const timeListToRender = syncLocalTimeListToFirebase(timesList)
+        const timeListToRender = await syncLocalTimeListToFirebase(timesList);
+
         setTimeList(timeListToRender);
       });
     }
@@ -55,13 +57,14 @@ const BookingsBase = ({ firebase, authUser }) => {
     <div>
       <TimeBooking authUser={authUser} syncedDate={date} setDate={setDate} />
 
-      {timeList && <Schedule
-        syncedDate={date}
-        timeList={timeList}
-        loading={loading}
-        onSubmit={onSubmit}
-        
-      />}
+      {timeList && (
+        <Schedule
+          syncedDate={date}
+          timeList={timeList}
+          loading={loading}
+          onSubmit={onSubmit}
+        />
+      )}
       {/* <TimeCard date={date}/> */}
     </div>
   );

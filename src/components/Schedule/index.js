@@ -32,12 +32,12 @@ const ScheduleBase = ({ timeList, loading, onSubmit }) => {
                   onClick={(e) => handleClick(e)}
                 >
                   Boka nu
-                </button> 
+                </button>
               </span>
             )}
-            {item.status !== Object(item.status) && item.type === "general" &&
+            {item.status !== Object(item.status) && item.type === "general" && (
               <span>Gemensam bastu</span>
-            }
+            )}
           </div>
         ))}
       {loading && <div>Loading....</div>}

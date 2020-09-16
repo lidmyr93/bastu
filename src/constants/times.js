@@ -6,7 +6,7 @@ export const AVAILABLE_TIMES = [
     type: "private",
   },
   {
-    startTime: "09:30",
+    startTime: "09.30",
     endTime: "11.00",
     status: "open",
     type: "private",
