@@ -66,9 +66,8 @@ const Navigation = () => {
   };
 
   const handleDrawerClose = () => {
-    console.log("close");
-    setOpen(false)
-  }
+    setOpen(false);
+  };
   return (
     <div>
       <AppBar position="fixed" className={classes.appBar}>
@@ -184,7 +183,7 @@ const NavigationAuth = ({ authUser, classes, handleDrawerClose }) => (
   </>
 );
 
-const NavigationNonAuth = ({handleDrawerClose}) => (
+const NavigationNonAuth = ({ handleDrawerClose }) => (
   <List>
     <ListItem button onClick={handleDrawerClose}>
       <ListItemIcon>
