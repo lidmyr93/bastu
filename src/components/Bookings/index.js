@@ -31,8 +31,7 @@ const BookingsBase = ({ firebase, authUser }) => {
     setLoading(false);
   };
   useEffect(() => {
-    /* setDate(getDate); */
-    setDate("2020-09-01");
+    setDate(getDate);
   }, []);
   const getSchedule = () => {
     setLoading(true);

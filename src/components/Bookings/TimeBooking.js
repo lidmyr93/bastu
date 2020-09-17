@@ -1,15 +1,22 @@
-import React, { useState, useEffect } from "react";
-import { AVAILABLE_TIMES } from "../../constants/times";
+import React, { useState } from "react";
+import {
+  DatePicker,
+  TimePicker,
+  DateTimePicker,
+  MuiPickersUtilsProvider,
+} from "@material-ui/pickers";
+import DateFnsUtils from "@date-io/date-fns";
+
 import { compose } from "recompose";
 import { withFirebase } from "../Firebase";
 import { withRouter } from "react-router-dom";
+import { formatISO } from "date-fns";
 
-//TODO: keep track of what times are booked for that and disable the option to book it
-const TimeBookingBase = ({ authUser, firebase, syncedDate, setDate }) => {
-  
-  const onDateChange = (e) => setDate(e.target.value);
-  
-  
+const TimeBookingBase = ({ syncedDate, setDate }) => {
+  const [open, setOpen] = useState(false);
+  const onDateChange = (date) =>
+    setDate(formatISO(new Date(date), { representation: "date" }));
+
   return (
     <div
       style={{
@@ -19,15 +26,16 @@ const TimeBookingBase = ({ authUser, firebase, syncedDate, setDate }) => {
         margin: "0 auto",
       }}
     >
-      <label htmlFor="time">Boka en tid</label>
-      <input
-        type="date"
-        name="date"
-        value={syncedDate}
-        onChange={(e) => onDateChange(e)}
-      />
-      
-      
+      <MuiPickersUtilsProvider utils={DateFnsUtils}>
+        <DatePicker
+          orientation="portrait"
+          variant="dialog"
+          openTo="date"
+          inputVariant="standard"
+          value={syncedDate}
+          onChange={onDateChange}
+        />
+      </MuiPickersUtilsProvider>
     </div>
   );
 };
