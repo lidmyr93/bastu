@@ -8,6 +8,7 @@ import TimeCard from "../Card/Card";
 import { compose } from "recompose";
 import { withFirebase } from "../Firebase";
 import syncLocalTimeListToFirebase from "../../Utils/syncLocalTimeListToFirebase";
+import { AVAILABLE_TIMES } from "../../constants/times";
 
 const BookingsBase = ({ firebase, authUser }) => {
   const [date, setDate] = useState("");
@@ -38,7 +39,7 @@ const BookingsBase = ({ firebase, authUser }) => {
     if (date) {
       firebase.times(date).on("value", async (snapshot) => {
         const timesObject = snapshot.val();
-        if (!timesObject) return setTimeList(null);
+        if (!timesObject) return setTimeList(AVAILABLE_TIMES);
         const timesList = Object.keys(timesObject).map((key) => ({
           ...timesObject[key],
           bookedBy: key,
