@@ -1,8 +1,6 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   DatePicker,
-  TimePicker,
-  DateTimePicker,
   MuiPickersUtilsProvider,
 } from "@material-ui/pickers";
 import DateFnsUtils from "@date-io/date-fns";
@@ -13,7 +11,6 @@ import { withRouter } from "react-router-dom";
 import { formatISO } from "date-fns";
 
 const TimeBookingBase = ({ syncedDate, setDate }) => {
-  const [open, setOpen] = useState(false);
   const onDateChange = (date) =>
     setDate(formatISO(new Date(date), { representation: "date" }));
 

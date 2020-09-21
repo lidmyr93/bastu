@@ -24,11 +24,20 @@ const BookingsBase = ({ firebase, authUser }) => {
       time: time,
       user: authUser,
     });
-    firebase.timeToUser(authUser.uid).push({
+    firebase.timeToUser(authUser.uid, date).set({
       date: date,
       time: time,
     });
     setLoading(false);
+  };
+
+  const onDelete = () => {
+    try {
+      firebase.bookTime(date, authUser.uid).remove();
+      firebase.timeToUser(authUser.uid, date).remove();
+    } catch (err) {
+      console.log(err);
+    }
   };
   useEffect(() => {
     setDate(getDate);
@@ -63,9 +72,10 @@ const BookingsBase = ({ firebase, authUser }) => {
           timeList={timeList}
           loading={loading}
           onSubmit={onSubmit}
+          authUser={authUser}
+          onDelete={onDelete}
         />
       )}
-      {/* <TimeCard date={date}/> */}
     </div>
   );
 };

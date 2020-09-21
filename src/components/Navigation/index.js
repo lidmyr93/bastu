@@ -54,7 +54,6 @@ const useStyles = makeStyles((theme) => ({
 const Navigation = () => {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
-  console.log(open);
   const toggleDrawer = (open) => (event) => {
     if (
       event.type === "keydown" &&

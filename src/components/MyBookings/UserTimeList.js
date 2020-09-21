@@ -6,9 +6,13 @@ const UserTimeList = ({ firebase, authUser }) => {
   const [loading, setLoading] = useState(false);
 
   const getUserTimes = () => {
-    firebase.timeToUser(authUser.uid).on("value", (snapshot) => {
+    firebase.getUserTimes(authUser.uid).on("value", (snapshot) => {
       const data = snapshot.val();
+
+      if (!data) return;
+
       const list = Object.keys(data).map((key) => ({ ...data[key] }));
+
       setUserTimes(list);
     });
   };
@@ -24,7 +28,7 @@ const UserTimeList = ({ firebase, authUser }) => {
           */}
       {!loading &&
         userTimes &&
-        userTimes.map((time) => (
+        userTimes.map(({ time }) => (
           <div key={time.date}>
             <span>Datum: {time.date}</span>
             <span>Starttid : {time.time.startTime}</span>
