@@ -4,7 +4,7 @@ import { withAuthorization, AuthUserContext } from "../Session";
 import Schedule from "../Schedule";
 import TimeBooking from "./TimeBooking";
 import { getDate } from "../../Utils/date";
-import TimeCard from "../Card/Card";
+
 import { compose } from "recompose";
 import { withFirebase } from "../Firebase";
 import syncLocalTimeListToFirebase from "../../Utils/syncLocalTimeListToFirebase";
@@ -27,11 +27,13 @@ const BookingsBase = ({ firebase, authUser }) => {
     firebase.timeToUser(authUser.uid, date).set({
       date: date,
       time: time,
+      user: authUser,
     });
     setLoading(false);
   };
 
-  const onDelete = () => {
+  const onDelete = (date) => {
+    console.log(date);
     try {
       firebase.bookTime(date, authUser.uid).remove();
       firebase.timeToUser(authUser.uid, date).remove();

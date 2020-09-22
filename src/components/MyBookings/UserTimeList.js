@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import BookingCard from "../Card/Card";
 import { withFirebase } from "../Firebase";
 
 const UserTimeList = ({ firebase, authUser }) => {
@@ -8,33 +9,49 @@ const UserTimeList = ({ firebase, authUser }) => {
   const getUserTimes = () => {
     firebase.getUserTimes(authUser.uid).on("value", (snapshot) => {
       const data = snapshot.val();
-
+      console.log("mybookings", data);
       if (!data) return;
 
-      const list = Object.keys(data).map((key) => ({ ...data[key] }));
+      const list = Object.keys(data).map((key) => ({
+        date: key,
+        startTime: data[key].time.time.startTime,
+        endTime: data[key].time.time.endTime,
+        status: {
+          time: { ...data[key].time.time },
+          user: { ...data[key].time.user },
+          bookedBy: data[key].time.user.uid,
+        },
+      }));
 
       setUserTimes(list);
     });
   };
+  const onDelete = (date) => {
+    try {
+      firebase.bookTime(date, authUser.uid).remove();
+      firebase.timeToUser(authUser.uid, date).remove();
+    } catch (err) {
+      console.log(err);
+    }
+  };
   useEffect(() => {
     getUserTimes();
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [authUser]);
   return (
     <div>
-      {/* 
-            time.date
-            time.time.end/start
-          */}
       {!loading &&
         userTimes &&
-        userTimes.map(({ time }) => (
-          <div key={time.date}>
-            <span>Datum: {time.date}</span>
-            <span>Starttid : {time.time.startTime}</span>
-            <span>Sluttid : {time.time.endTime}</span>
-          </div>
+        userTimes.map((item) => (
+          <BookingCard
+            item={item}
+            authUser={authUser}
+            date={item.date}
+            onDelete={onDelete}
+          />
         ))}
+
       {loading && <div>Loading</div>}
     </div>
   );
