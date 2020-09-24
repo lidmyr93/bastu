@@ -7,6 +7,7 @@ import CardMedia from "@material-ui/core/CardMedia";
 import Typography from "@material-ui/core/Typography";
 import { Divider, Button } from "@material-ui/core";
 import { RULES } from "../../constants/rules";
+import { timestampToDate } from "../../Utils/date";
 
 const useStyles = makeStyles((theme, props) => ({
   root: {
@@ -105,10 +106,10 @@ const BookingCard = ({
           {/* Max amount of bookings during time period  */}
           {item.status !== Object(item.status) &&
             item.type === "private" &&
-            userBookingAmount <= RULES.maxBookingAmount && (
+            userBookingAmount >= RULES.maxBookingAmount && (
               <Typography>
                 Max boxningar under tidsintervall: {RULES.timePeroidWeeks}{" "}
-                veckor
+                veckor nåd
               </Typography>
             )}
           {/* Non-bookable time */}
