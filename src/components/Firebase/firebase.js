@@ -59,13 +59,19 @@ class Firebase {
 
   users = () => this.db.ref("users");
 
-  bookTime = (date, uid) => this.db.ref(`schedule/${date}/${uid}`);
-  
-  times = (date) => this.db.ref(`schedule/${date}`);
-  
-  timeToUser = (uid, date) => this.db.ref(`usersBookings/${uid}/${date}/time`)
-  
-  getUserTimes = (uid) => this.db.ref(`usersBookings/${uid}`)
+  bookTime = () => this.db.ref(`booking/`);
+
+  getTimesByDate = (date) =>
+    this.db.ref(`booking`).orderByChild(`date`).equalTo(date);
+
+  getUserTimes = (uid) => this.db.ref(`booking/`).orderByChild(`/user/${uid}`);
+
+  checkUserBookingAmount = (startDate, endDate) =>
+    this.db
+      .ref(`booking/`)
+      .orderByChild(`date`)
+      .startAt(startDate)
+      .endAt(endDate);
 }
 
 export default Firebase;

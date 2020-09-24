@@ -7,11 +7,13 @@ const UserTimeList = ({ firebase, authUser }) => {
   const [loading, setLoading] = useState(false);
 
   const getUserTimes = () => {
+    setLoading(true);
     firebase.getUserTimes(authUser.uid).on("value", (snapshot) => {
       const data = snapshot.val();
       console.log("mybookings", data);
       if (!data) return;
 
+      //TODO: refactor this to match new data
       const list = Object.keys(data).map((key) => ({
         date: key,
         startTime: data[key].time.time.startTime,

@@ -3,29 +3,78 @@ import { withAuthorization, AuthUserContext } from "../Session";
 
 import Schedule from "../Schedule";
 import TimeBooking from "./TimeBooking";
-import { getDate } from "../../Utils/date";
-
+import {
+  dateToTimestamp,
+  getDate,
+  getDatePeriod,
+  timestampToDate,
+} from "../../Utils/date";
 import { compose } from "recompose";
 import { withFirebase } from "../Firebase";
 import syncLocalTimeListToFirebase from "../../Utils/syncLocalTimeListToFirebase";
 import { AVAILABLE_TIMES } from "../../constants/times";
+import { RULES } from "../../constants/rules";
 
 const BookingsBase = ({ firebase, authUser }) => {
   const [date, setDate] = useState("");
   const [timeList, setTimeList] = useState(null);
   const [loading, setLoading] = useState(false);
-  /* const [time, setTime] = useState(""); */
+  const [userBookingAmount, setUserBookingAmount] = useState("cookie");
+
+  const checkUserBookingAmount = async () => {
+    const datePeriod = getDatePeriod();
+
+    //TODO: check if you can query this from firebase directly
+
+    firebase
+      .checkUserBookingAmount(datePeriod.startDate, datePeriod.endDate)
+      .on("value", (snapshot) => {
+        const data = snapshot.val();
+        if (!data) return 0;
+        const array = Object.keys(data).filter(
+          (key) => data[key].user.uid === authUser.uid
+        );
+        setUserBookingAmount(array.length);
+      });
+
+    return null;
+  };
+
+  const getSchedule = () => {
+    if (date) {
+      //Gets users total booking during a 2 week timespan from todays date
+      checkUserBookingAmount();
+      firebase
+        .getTimesByDate(dateToTimestamp(date))
+        .on("value", async (snapshot) => {
+          const timesObject = snapshot.val();
+          if (!timesObject) return setTimeList(AVAILABLE_TIMES);
+          const timesList = Object.keys(timesObject).map((key) => ({
+            ...timesObject[key],
+            bookedBy: timesObject[key].user.uid,
+          }));
+
+          const timeListToRender = await syncLocalTimeListToFirebase(timesList);
+
+          setTimeList(timeListToRender);
+        });
+    }
+  };
+  useEffect(() => {
+    setLoading(true);
+    getSchedule();
+    setLoading(false);
+  }, [date]);
+
+  useEffect(() => {
+    setDate(getDate);
+  }, []);
 
   const onSubmit = (time) => {
     setLoading(true);
     console.log(`Tid bokad, ${JSON.stringify(time)}, datum : ${date}`);
-    firebase.bookTime(date, authUser.uid).set({
-      date: date,
-      time: time,
-      user: authUser,
-    });
-    firebase.timeToUser(authUser.uid, date).set({
-      date: date,
+    firebase.bookTime().push({
+      date: dateToTimestamp(date),
       time: time,
       user: authUser,
     });
@@ -33,37 +82,18 @@ const BookingsBase = ({ firebase, authUser }) => {
   };
 
   const onDelete = (date) => {
-    console.log(date);
     try {
-      firebase.bookTime(date, authUser.uid).remove();
-      firebase.timeToUser(authUser.uid, date).remove();
+      firebase.getTimesByDate(date).once("value", (snapshot) => {
+        const timeObject = snapshot;
+        timeObject.forEach((child) => {
+          if (child.val().user.uid === authUser.uid) child.ref.remove();
+        });
+      });
     } catch (err) {
       console.log(err);
     }
   };
-  useEffect(() => {
-    setDate(getDate);
-  }, []);
-  const getSchedule = () => {
-    setLoading(true);
-    if (date) {
-      firebase.times(date).on("value", async (snapshot) => {
-        const timesObject = snapshot.val();
-        if (!timesObject) return setTimeList(AVAILABLE_TIMES);
-        const timesList = Object.keys(timesObject).map((key) => ({
-          ...timesObject[key],
-          bookedBy: key,
-        }));
-        const timeListToRender = await syncLocalTimeListToFirebase(timesList);
 
-        setTimeList(timeListToRender);
-      });
-    }
-    setLoading(false);
-  };
-  useEffect(() => {
-    getSchedule();
-  }, [date]);
   return (
     <div>
       <TimeBooking authUser={authUser} syncedDate={date} setDate={setDate} />
@@ -76,6 +106,7 @@ const BookingsBase = ({ firebase, authUser }) => {
           onSubmit={onSubmit}
           authUser={authUser}
           onDelete={onDelete}
+          userBookingAmount={userBookingAmount}
         />
       )}
     </div>
@@ -85,10 +116,10 @@ const BookingsBase = ({ firebase, authUser }) => {
 const condition = (authUser) => !!authUser;
 
 const Booking = compose(withFirebase)(BookingsBase);
-const test = () => (
+const BookingHOC = () => (
   <AuthUserContext.Consumer>
     {(authUser) => <Booking authUser={authUser} />}
   </AuthUserContext.Consumer>
 );
 
-export default withAuthorization(condition)(test);
+export default withAuthorization(condition)(BookingHOC);
