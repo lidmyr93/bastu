@@ -7,7 +7,6 @@ import CardMedia from "@material-ui/core/CardMedia";
 import Typography from "@material-ui/core/Typography";
 import { Divider, Button } from "@material-ui/core";
 import { RULES } from "../../constants/rules";
-import { timestampToDate } from "../../Utils/date";
 
 const useStyles = makeStyles((theme, props) => ({
   root: {
@@ -46,12 +45,10 @@ const BookingCard = ({
   onDelete,
   handleClick,
   index,
-  date = null,
   userBookingAmount,
 }) => {
   const classes = useStyles();
   const handleDelete = () => onDelete(item.status.date);
-
   return (
     <Card className={classes.root}>
       <CardMedia className={classes.cover} color="red">
@@ -65,11 +62,9 @@ const BookingCard = ({
           {item.status === Object(item.status) && (
             <>
               {/* Is viewing self booked or not */}
-              {item.status.bookedBy === authUser.uid ? (
-                <>
-                  {date !== null && (
-                    <Typography>Datum : {item.date}</Typography>
-                  )}
+              {item.status.user.uid === authUser.uid ? (
+                <div>
+                  <Typography>Din tid</Typography>
                   <Button
                     variant="outlined"
                     color="secondary"
@@ -79,7 +74,7 @@ const BookingCard = ({
                     Avboka
                   </Button>
                   {/* Viewing self in mybookings page */}
-                </>
+                </div>
               ) : (
                 <Typography>
                   Bokad av: {item.status.user.username}
@@ -91,7 +86,6 @@ const BookingCard = ({
           {/* No Booked time on the slot */}
           {item.status !== Object(item.status) &&
             item.type === "private" &&
-            date === null &&
             userBookingAmount < RULES.maxBookingAmount && (
               <Button
                 variant="outlined"

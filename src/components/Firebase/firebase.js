@@ -64,7 +64,8 @@ class Firebase {
   getTimesByDate = (date) =>
     this.db.ref(`booking`).orderByChild(`date`).equalTo(date);
 
-  getUserTimes = (uid) => this.db.ref(`booking/`).orderByChild(`/user/${uid}`);
+  getUserTimes = (uid) =>
+    this.db.ref(`booking/`).orderByChild(`/user/uid`).equalTo(uid);
 
   checkUserBookingAmount = (startDate, endDate) =>
     this.db

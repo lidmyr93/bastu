@@ -3,8 +3,6 @@ import { withStyles, makeStyles } from "@material-ui/core/styles";
 
 import TextField from "@material-ui/core/TextField";
 
-import { green } from "@material-ui/core/colors";
-
 const CssTextField = withStyles({
   root: {
     "& label.Mui-focused": {
@@ -34,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
   },
   margin: {
     margin: theme.spacing(1),
-    width: "100%"
+    width: "100%",
   },
 }));
 

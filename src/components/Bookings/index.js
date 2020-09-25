@@ -1,25 +1,18 @@
 import React, { useState, useEffect } from "react";
+import { compose } from "recompose";
 import { withAuthorization, AuthUserContext } from "../Session";
-
 import Schedule from "../Schedule";
 import TimeBooking from "./TimeBooking";
-import {
-  dateToTimestamp,
-  getDate,
-  getDatePeriod,
-  timestampToDate,
-} from "../../Utils/date";
-import { compose } from "recompose";
+import { dateToTimestamp, getDate, getDatePeriod } from "../../Utils/date";
 import { withFirebase } from "../Firebase";
 import syncLocalTimeListToFirebase from "../../Utils/syncLocalTimeListToFirebase";
 import { AVAILABLE_TIMES } from "../../constants/times";
-import { RULES } from "../../constants/rules";
 
 const BookingsBase = ({ firebase, authUser }) => {
   const [date, setDate] = useState("");
   const [timeList, setTimeList] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [userBookingAmount, setUserBookingAmount] = useState("cookie");
+  const [userBookingAmount, setUserBookingAmount] = useState(false);
 
   const checkUserBookingAmount = async () => {
     const datePeriod = getDatePeriod();
@@ -30,7 +23,7 @@ const BookingsBase = ({ firebase, authUser }) => {
       .checkUserBookingAmount(datePeriod.startDate, datePeriod.endDate)
       .on("value", (snapshot) => {
         const data = snapshot.val();
-        if (!data) return 0;
+        if (!data) return setUserBookingAmount(0);
         const array = Object.keys(data).filter(
           (key) => data[key].user.uid === authUser.uid
         );
@@ -72,7 +65,6 @@ const BookingsBase = ({ firebase, authUser }) => {
 
   const onSubmit = (time) => {
     setLoading(true);
-    console.log(`Tid bokad, ${JSON.stringify(time)}, datum : ${date}`);
     firebase.bookTime().push({
       date: dateToTimestamp(date),
       time: time,
@@ -90,7 +82,7 @@ const BookingsBase = ({ firebase, authUser }) => {
         });
       });
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   };
 
