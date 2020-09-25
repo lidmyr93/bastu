@@ -3,7 +3,14 @@ import { withFirebase } from "../Firebase";
 import { compose } from "recompose";
 import BookingCard from "../Card/Card";
 
-const ScheduleBase = ({ timeList, loading, onSubmit, authUser, onDelete }) => {
+const ScheduleBase = ({
+  timeList,
+  loading,
+  onSubmit,
+  authUser,
+  onDelete,
+  userBookingAmount,
+}) => {
   const handleClick = (e) => {
     if (!isNaN(e.currentTarget.value)) {
       onSubmit(timeList[e.currentTarget.value]);
@@ -23,6 +30,7 @@ const ScheduleBase = ({ timeList, loading, onSubmit, authUser, onDelete }) => {
             index={i}
             handleClick={handleClick}
             onDelete={onDelete}
+            userBookingAmount={userBookingAmount}
           />
         ))}
       {loading && <div>Loading....</div>}

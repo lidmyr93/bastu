@@ -1,8 +1,5 @@
 import React from "react";
-import {
-  DatePicker,
-  MuiPickersUtilsProvider,
-} from "@material-ui/pickers";
+import { DatePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
 import DateFnsUtils from "@date-io/date-fns";
 
 import { compose } from "recompose";

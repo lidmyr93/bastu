@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import BookingCard from "../Card/Card";
+import UserTimeCard from "../Card/UserTimeCard";
 import { withFirebase } from "../Firebase";
 
 const UserTimeList = ({ firebase, authUser }) => {
@@ -7,31 +7,30 @@ const UserTimeList = ({ firebase, authUser }) => {
   const [loading, setLoading] = useState(false);
 
   const getUserTimes = () => {
+    setLoading(true);
     firebase.getUserTimes(authUser.uid).on("value", (snapshot) => {
       const data = snapshot.val();
-      console.log("mybookings", data);
-      if (!data) return;
-
+      if (!data) return null;
       const list = Object.keys(data).map((key) => ({
-        date: key,
-        startTime: data[key].time.time.startTime,
-        endTime: data[key].time.time.endTime,
         status: {
-          time: { ...data[key].time.time },
-          user: { ...data[key].time.user },
-          bookedBy: data[key].time.user.uid,
+          ...data[key],
+          bookingId: key,
         },
       }));
-
       setUserTimes(list);
+      setLoading(false);
     });
   };
   const onDelete = (date) => {
     try {
-      firebase.bookTime(date, authUser.uid).remove();
-      firebase.timeToUser(authUser.uid, date).remove();
+      firebase.getTimesByDate(date).once("value", (snapshot) => {
+        const timeObject = snapshot;
+        timeObject.forEach((child) => {
+          if (child.val().user.uid === authUser.uid) child.ref.remove();
+        });
+      });
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   };
   useEffect(() => {
@@ -44,12 +43,7 @@ const UserTimeList = ({ firebase, authUser }) => {
       {!loading &&
         userTimes &&
         userTimes.map((item) => (
-          <BookingCard
-            item={item}
-            authUser={authUser}
-            date={item.date}
-            onDelete={onDelete}
-          />
+          <UserTimeCard item={item} onDelete={onDelete} />
         ))}
 
       {loading && <div>Loading</div>}

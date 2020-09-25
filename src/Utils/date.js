@@ -1,9 +1,15 @@
-export const getDate = () => {
-  const date = new Date();
-  const year = date.getFullYear();
-  let month = date.getMonth() + 1;
-  let day = date.getDate();
-  if (month < 10) month = "0" + month;
-  if (day < 10) day = "0" + day;
-  return `${year}-${month}-${day}`;
+import { addWeeks, formatISO, fromUnixTime, getUnixTime } from "date-fns";
+import { RULES } from "../constants/rules";
+
+export const getDate = () => formatISO(new Date(), { representation: "date" });
+
+export const getDatePeriod = () => {
+  const startDate = dateToTimestamp(getDate());
+  const endDate = dateToTimestamp(addWeeks(new Date(), RULES.timePeroidWeeks), {
+    representation: "date",
+  });
+  return { startDate, endDate };
 };
+
+export const dateToTimestamp = (date) => getUnixTime(new Date(date));
+export const timestampToDate = (timestamp) => fromUnixTime(timestamp);

@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 
 import AuthUserContext from "./context";
 import { withFirebase } from "../Firebase";
@@ -13,11 +13,14 @@ const withAuthentication = (Component) => {
       };
     }
     componentDidMount() {
-      this.listener = this.props.firebase.onAuthUserListener(authUser => {
-        this.setState({authUser})
-      },
-      () => {this.setState({authUser: null})}
-      )
+      this.listener = this.props.firebase.onAuthUserListener(
+        (authUser) => {
+          this.setState({ authUser });
+        },
+        () => {
+          this.setState({ authUser: null });
+        }
+      );
     }
     componentWillUnmount() {
       this.listener();

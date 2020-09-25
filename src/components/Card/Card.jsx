@@ -6,7 +6,7 @@ import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
 import Typography from "@material-ui/core/Typography";
 import { Divider, Button } from "@material-ui/core";
-import { formatISO } from "date-fns";
+import { RULES } from "../../constants/rules";
 
 const useStyles = makeStyles((theme, props) => ({
   root: {
@@ -45,15 +45,10 @@ const BookingCard = ({
   onDelete,
   handleClick,
   index,
-  date = null,
+  userBookingAmount,
 }) => {
   const classes = useStyles();
-  const handleDelete = () => {
-    if (!item.date) {
-      onDelete(formatISO(new Date(), { representation: "date" }));
-    }
-    onDelete(item.date);
-  };
+  const handleDelete = () => onDelete(item.status.date);
   return (
     <Card className={classes.root}>
       <CardMedia className={classes.cover} color="red">
@@ -67,11 +62,9 @@ const BookingCard = ({
           {item.status === Object(item.status) && (
             <>
               {/* Is viewing self booked or not */}
-              {item.status.bookedBy === authUser.uid ? (
-                <>
-                  {date !== null && (
-                    <Typography>Datum : {item.date}</Typography>
-                  )}
+              {item.status.user.uid === authUser.uid ? (
+                <div>
+                  <Typography>Din tid</Typography>
                   <Button
                     variant="outlined"
                     color="secondary"
@@ -81,7 +74,7 @@ const BookingCard = ({
                     Avboka
                   </Button>
                   {/* Viewing self in mybookings page */}
-                </>
+                </div>
               ) : (
                 <Typography>
                   Bokad av: {item.status.user.username}
@@ -93,7 +86,7 @@ const BookingCard = ({
           {/* No Booked time on the slot */}
           {item.status !== Object(item.status) &&
             item.type === "private" &&
-            date === null && (
+            userBookingAmount < RULES.maxBookingAmount && (
               <Button
                 variant="outlined"
                 className={classes.button}
@@ -103,6 +96,15 @@ const BookingCard = ({
               >
                 Boka nu
               </Button>
+            )}
+          {/* Max amount of bookings during time period  */}
+          {item.status !== Object(item.status) &&
+            item.type === "private" &&
+            userBookingAmount >= RULES.maxBookingAmount && (
+              <Typography>
+                Max boxningar under tidsintervall: {RULES.timePeroidWeeks}{" "}
+                veckor nåd
+              </Typography>
             )}
           {/* Non-bookable time */}
           {item.status !== Object(item.status) && item.type === "general" && (
