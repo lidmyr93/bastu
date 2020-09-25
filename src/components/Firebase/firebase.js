@@ -25,7 +25,6 @@ class Firebase {
           .once("value")
           .then((snapshot) => {
             const dbUser = snapshot.val();
-
             if (!dbUser.roles) {
               dbUser.roles = {};
             }
@@ -73,6 +72,9 @@ class Firebase {
       .orderByChild(`date`)
       .startAt(startDate)
       .endAt(endDate);
+
+  checkHouseAccountAmount = (houseNumber) =>
+    this.db.ref("users").orderByChild("houseNumber").equalTo(houseNumber);
 }
 
 export default Firebase;
