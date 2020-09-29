@@ -36,6 +36,9 @@ const UserTimeList = ({ firebase, authUser }) => {
   useEffect(() => {
     getUserTimes();
 
+    //TODO: Look into calling query methods for different scenarios in the get functions 
+    //instead on the refs , looks weird to call off on the "base listener"
+    return () => firebase.bookTime().off()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [authUser]);
   return (

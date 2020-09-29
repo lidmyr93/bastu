@@ -82,7 +82,7 @@ const Navigation = () => {
               className={classes.toggleContainer}
             />
           )}
-          <Typography variant="h6" nowrap>
+          <Typography variant="h6" >
             Bastu - Norra Oxhalsö
           </Typography>
         </Toolbar>
