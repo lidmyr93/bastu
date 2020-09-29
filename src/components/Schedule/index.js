@@ -25,6 +25,7 @@ const ScheduleBase = ({
         timeList &&
         timeList.map((item, i) => (
           <BookingCard
+          key={item.startTime}
             item={item}
             authUser={authUser}
             index={i}

@@ -102,7 +102,7 @@ const BookingCard = ({
             item.type === "private" &&
             userBookingAmount >= RULES.maxBookingAmount && (
               <Typography>
-                Max boxningar under tidsintervall: {RULES.timePeroidWeeks}{" "}
+                Max bokningar under tidsintervall: {RULES.timePeroidWeeks}{" "}
                 veckor nåd
               </Typography>
             )}

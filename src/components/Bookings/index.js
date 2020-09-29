@@ -57,6 +57,8 @@ const BookingsBase = ({ firebase, authUser }) => {
     setLoading(true);
     getSchedule();
     setLoading(false);
+
+    return () => firebase.bookTime().off()
   }, [date]);
 
   useEffect(() => {
