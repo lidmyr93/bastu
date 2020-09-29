@@ -2,7 +2,6 @@ import React from "react";
 import Navigation from "../Navigation";
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import * as ROUTES from "../../constants/routes";
-import HomePage from "../Home";
 import SignInPage from "../SignIn";
 import Bookings from "../Bookings";
 import MyBookings from "../MyBookings";

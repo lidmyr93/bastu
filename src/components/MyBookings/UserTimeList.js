@@ -6,7 +6,6 @@ import { withFirebase } from "../Firebase";
 const UserTimeList = ({ firebase, authUser }) => {
   const [userTimes, setUserTimes] = useState(null);
   const [loading, setLoading] = useState(false);
-
   const getUserTimes = () => {
     setLoading(true);
     firebase.getUserTimes(authUser.uid).on("value", (snapshot) => {
@@ -50,7 +49,11 @@ const UserTimeList = ({ firebase, authUser }) => {
     <div>
       {!loading && userTimes ? (
         userTimes.map((item) => (
-          <UserTimeCard item={item} onDelete={onDelete} />
+          <UserTimeCard
+            item={item}
+            onDelete={onDelete}
+            key={item.status.date}
+          />
         ))
       ) : (
         <Typography>Inga Tider</Typography>

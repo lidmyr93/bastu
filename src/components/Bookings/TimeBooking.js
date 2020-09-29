@@ -1,11 +1,12 @@
 import React from "react";
 import { DatePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
 import DateFnsUtils from "@date-io/date-fns";
-
+import { sv } from "date-fns/locale";
 import { compose } from "recompose";
 import { withFirebase } from "../Firebase";
 import { withRouter } from "react-router-dom";
 import { formatISO } from "date-fns";
+import { getDatePeriod, timestampToDate } from "../../Utils/date";
 
 const TimeBookingBase = ({ syncedDate, setDate }) => {
   const onDateChange = (date) =>
@@ -20,7 +21,7 @@ const TimeBookingBase = ({ syncedDate, setDate }) => {
         margin: "0 auto",
       }}
     >
-      <MuiPickersUtilsProvider utils={DateFnsUtils}>
+      <MuiPickersUtilsProvider utils={DateFnsUtils} locale={sv}>
         <DatePicker
           orientation="portrait"
           variant="dialog"
@@ -28,6 +29,8 @@ const TimeBookingBase = ({ syncedDate, setDate }) => {
           inputVariant="standard"
           value={syncedDate}
           onChange={onDateChange}
+          disablePast={true}
+          maxDate={timestampToDate(getDatePeriod().endDate)}
         />
       </MuiPickersUtilsProvider>
     </div>

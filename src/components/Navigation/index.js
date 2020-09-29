@@ -18,7 +18,6 @@ import ListItemText from "@material-ui/core/ListItemText";
 import {
   Menu,
   MenuOpen,
-  Home,
   Schedule,
   KeyboardTab,
   AccountCircle,
