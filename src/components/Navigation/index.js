@@ -82,9 +82,7 @@ const Navigation = () => {
               className={classes.toggleContainer}
             />
           )}
-          <Typography variant="h6" >
-            Bastu - Norra Oxhalsö
-          </Typography>
+          <Typography variant="h6">Bastu - Norra Oxhalsö</Typography>
         </Toolbar>
       </AppBar>
 
@@ -124,14 +122,6 @@ const Navigation = () => {
 const NavigationAuth = ({ authUser, classes, handleDrawerClose }) => (
   <>
     <List>
-      <ListItem button onClick={handleDrawerClose}>
-        <ListItemIcon>
-          <Home />
-        </ListItemIcon>
-        <ListItemText>
-          <Link to={ROUTES.HOME}>Hem</Link>
-        </ListItemText>
-      </ListItem>
       <ListItem button onClick={handleDrawerClose}>
         <ListItemIcon>
           <Schedule />
@@ -184,15 +174,6 @@ const NavigationAuth = ({ authUser, classes, handleDrawerClose }) => (
 
 const NavigationNonAuth = ({ handleDrawerClose }) => (
   <List>
-    <ListItem button onClick={handleDrawerClose}>
-      <ListItemIcon>
-        <Home />
-      </ListItemIcon>
-      <ListItemText>
-        <Link to={ROUTES.HOME}>Hem</Link>
-      </ListItemText>
-    </ListItem>
-
     <ListItem button onClick={handleDrawerClose}>
       <ListItemIcon>
         <KeyboardTab />

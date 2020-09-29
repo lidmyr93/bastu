@@ -9,7 +9,8 @@ const ScheduleBase = ({
   onSubmit,
   authUser,
   onDelete,
-  userBookingAmount,
+  bookingPerDayLimit,
+  bookingPerWeeksLimit,
 }) => {
   const handleClick = (e) => {
     if (!isNaN(e.currentTarget.value)) {
@@ -25,13 +26,14 @@ const ScheduleBase = ({
         timeList &&
         timeList.map((item, i) => (
           <BookingCard
-          key={item.startTime}
+            key={item.startTime}
             item={item}
             authUser={authUser}
             index={i}
             handleClick={handleClick}
             onDelete={onDelete}
-            userBookingAmount={userBookingAmount}
+            bookingPerWeeksLimit={bookingPerWeeksLimit}
+            bookingPerDayLimit={bookingPerDayLimit}
           />
         ))}
       {loading && <div>Loading....</div>}

@@ -3,4 +3,5 @@ export const RULES = {
   timePeriodDays: 14,
   timePeroidWeeks: 2,
   maxAccountsPerHouse: 4,
+  maxBookingAmountPerDay: 1,
 };

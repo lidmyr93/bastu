@@ -1,3 +1,4 @@
+import { Typography } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
 import UserTimeCard from "../Card/UserTimeCard";
 import { withFirebase } from "../Firebase";
@@ -10,7 +11,11 @@ const UserTimeList = ({ firebase, authUser }) => {
     setLoading(true);
     firebase.getUserTimes(authUser.uid).on("value", (snapshot) => {
       const data = snapshot.val();
-      if (!data) return null;
+      if (!data) {
+        setUserTimes(false);
+        setLoading(false);
+        return;
+      }
       const list = Object.keys(data).map((key) => ({
         status: {
           ...data[key],
@@ -36,18 +41,20 @@ const UserTimeList = ({ firebase, authUser }) => {
   useEffect(() => {
     getUserTimes();
 
-    //TODO: Look into calling query methods for different scenarios in the get functions 
+    //TODO: Look into calling query methods for different scenarios in the get functions
     //instead on the refs , looks weird to call off on the "base listener"
-    return () => firebase.bookTime().off()
+    return () => firebase.bookTime().off();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [authUser]);
   return (
     <div>
-      {!loading &&
-        userTimes &&
+      {!loading && userTimes ? (
         userTimes.map((item) => (
           <UserTimeCard item={item} onDelete={onDelete} />
-        ))}
+        ))
+      ) : (
+        <Typography>Inga Tider</Typography>
+      )}
 
       {loading && <div>Loading</div>}
     </div>

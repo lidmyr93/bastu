@@ -12,7 +12,16 @@ const BookingsBase = ({ firebase, authUser }) => {
   const [date, setDate] = useState("");
   const [timeList, setTimeList] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [userBookingAmount, setUserBookingAmount] = useState(false);
+  /* 
+    userBookingAmount = {
+      perWeeks: int,
+      perDay: int
+    }
+  */
+  //true if booking on same day
+  const [bookingPerDayLimit, setBookingPerDayLimit] = useState(false);
+  //Int for tracking bookings during timespan
+  const [bookingPerWeeksLimit, setBookingPerWeeksLimit] = useState(false);
 
   const checkUserBookingAmount = async () => {
     const datePeriod = getDatePeriod();
@@ -23,17 +32,20 @@ const BookingsBase = ({ firebase, authUser }) => {
       .checkUserBookingAmount(datePeriod.startDate, datePeriod.endDate)
       .on("value", (snapshot) => {
         const data = snapshot.val();
-        if (!data) return setUserBookingAmount(0);
+        if (!data) return;
         const array = Object.keys(data).filter(
           (key) => data[key].user.uid === authUser.uid
         );
-        setUserBookingAmount(array.length);
+
+        if (array.length) {
+          setBookingPerWeeksLimit(array.length);
+        }
       });
 
     return null;
   };
 
-  const getSchedule = () => {
+  const getSchedule = async () => {
     if (date) {
       //Gets users total booking during a 2 week timespan from todays date
       checkUserBookingAmount();
@@ -41,13 +53,26 @@ const BookingsBase = ({ firebase, authUser }) => {
         .getTimesByDate(dateToTimestamp(date))
         .on("value", async (snapshot) => {
           const timesObject = snapshot.val();
-          if (!timesObject) return setTimeList(AVAILABLE_TIMES);
+          if (!timesObject) {
+            setTimeList(AVAILABLE_TIMES);
+            setBookingPerDayLimit(false);
+            return;
+          }
+
           const timesList = Object.keys(timesObject).map((key) => ({
             ...timesObject[key],
             bookedBy: timesObject[key].user.uid,
           }));
 
+          //Render
           const timeListToRender = await syncLocalTimeListToFirebase(timesList);
+          //Userbookings amount for date, MAX 1
+          const userBookingAmountForDate = timesList.some(
+            (time) => time.bookedBy === authUser.uid
+          );
+          if (userBookingAmountForDate) {
+            setBookingPerDayLimit(true);
+          }
 
           setTimeList(timeListToRender);
         });
@@ -58,11 +83,12 @@ const BookingsBase = ({ firebase, authUser }) => {
     getSchedule();
     setLoading(false);
 
-    return () => firebase.bookTime().off()
+    return () => firebase.bookTime().off();
   }, [date]);
 
   useEffect(() => {
     setDate(getDate);
+    /* setDate("2020-10-02"); */
   }, []);
 
   const onSubmit = (time) => {
@@ -100,7 +126,8 @@ const BookingsBase = ({ firebase, authUser }) => {
           onSubmit={onSubmit}
           authUser={authUser}
           onDelete={onDelete}
-          userBookingAmount={userBookingAmount}
+          bookingPerWeeksLimit={bookingPerWeeksLimit}
+          bookingPerDayLimit={bookingPerDayLimit}
         />
       )}
     </div>

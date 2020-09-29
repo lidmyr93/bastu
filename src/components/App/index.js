@@ -15,18 +15,21 @@ import AdminPage from "../Admin";
 import { Container } from "@material-ui/core";
 
 const App = (props) => {
+  //props.authUser
+  //TODO: Investigate rendering diff routes depening on logged in or not
+  // rootpage sign in logged out and bookings logged in
   return (
     <div>
       <Router>
         <Navigation />
         <Container maxWidth="sm">
           <hr />
-          <Route exact path={ROUTES.HOME} component={HomePage} />
+          {/* <Route exact path={ROUTES.HOME} component={HomePage} /> */}
+          <Route exact path={ROUTES.BOOKINGS} component={Bookings} />
           <Route path={ROUTES.SIGN_IN} component={SignInPage} />
           <Route path={ROUTES.SIGN_UP} component={SignUpPage} />
           <Route path={ROUTES.PASSWORD_FORGET} component={PasswordForgetPage} />
 
-          <Route path={ROUTES.BOOKINGS} component={Bookings} />
           <Route path={ROUTES.MY_BOOKINGS} component={MyBookings} />
           <Route path={ROUTES.ACCOUNT} component={AccountPage} />
           <Route path={ROUTES.ADMIN} component={AdminPage} />
@@ -42,7 +45,7 @@ export default withAuthentication(App);
 
 /* 
 Material UI:
-Backdrop - loading
+Backdrop - loading || Skeleton
 Snackbar error messages / success messages
 Avatar Icon for menu
 

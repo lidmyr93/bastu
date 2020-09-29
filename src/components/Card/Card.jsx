@@ -45,10 +45,12 @@ const BookingCard = ({
   onDelete,
   handleClick,
   index,
-  userBookingAmount,
+  bookingPerDayLimit,
+  bookingPerWeeksLimit,
 }) => {
   const classes = useStyles();
   const handleDelete = () => onDelete(item.status.date);
+
   return (
     <Card className={classes.root}>
       <CardMedia className={classes.cover} color="red">
@@ -84,9 +86,12 @@ const BookingCard = ({
             </>
           )}
           {/* No Booked time on the slot */}
+          {/*  bookingPerDayLimit,
+            bookingPerWeeksLimit, */}
           {item.status !== Object(item.status) &&
             item.type === "private" &&
-            userBookingAmount < RULES.maxBookingAmount && (
+            bookingPerWeeksLimit < RULES.maxBookingAmount &&
+            !bookingPerDayLimit && (
               <Button
                 variant="outlined"
                 className={classes.button}
@@ -100,13 +105,22 @@ const BookingCard = ({
           {/* Max amount of bookings during time period  */}
           {item.status !== Object(item.status) &&
             item.type === "private" &&
-            userBookingAmount >= RULES.maxBookingAmount && (
+            bookingPerWeeksLimit >= RULES.maxBookingAmount &&
+            !bookingPerDayLimit && (
               <Typography>
                 Max bokningar under tidsintervall: {RULES.timePeroidWeeks}{" "}
-                veckor nåd
+                veckor
               </Typography>
             )}
-          {/* Non-bookable time */}
+          {/* Max amount of booking on same date */}
+          {item.status !== Object(item.status) &&
+            item.type === "private" &&
+            bookingPerDayLimit && (
+              <Typography>
+                Tid redan bokad för datumet, avboka tiden för att boka om
+              </Typography>
+            )}{" "}
+          {/* NonBookableTime */}
           {item.status !== Object(item.status) && item.type === "general" && (
             <Typography>Gemensam bastu</Typography>
           )}
