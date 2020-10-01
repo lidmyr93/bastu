@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { compose } from "recompose";
 import { withAuthorization, AuthUserContext } from "../Session";
 import Schedule from "../Schedule";
@@ -12,18 +12,12 @@ const BookingsBase = ({ firebase, authUser }) => {
   const [date, setDate] = useState("");
   const [timeList, setTimeList] = useState(null);
   const [loading, setLoading] = useState(false);
-  /* 
-    userBookingAmount = {
-      perWeeks: int,
-      perDay: int
-    }
-  */
   //true if booking on same day
   const [bookingPerDayLimit, setBookingPerDayLimit] = useState(false);
   //Int for tracking bookings during timespan
   const [bookingPerWeeksLimit, setBookingPerWeeksLimit] = useState(false);
 
-  const checkUserBookingAmount = async () => {
+  const checkUserBookingAmount = useCallback(async () => {
     const datePeriod = getDatePeriod();
 
     //TODO: check if you can query this from firebase directly
@@ -43,9 +37,10 @@ const BookingsBase = ({ firebase, authUser }) => {
       });
 
     return null;
-  };
+  }, [authUser.uid, firebase])
 
-  const getSchedule = async () => {
+  const getSchedule = useCallback(async () => {
+    setLoading(true)
     if (date) {
       //Gets users total booking during a 2 week timespan from todays date
       checkUserBookingAmount();
@@ -56,6 +51,7 @@ const BookingsBase = ({ firebase, authUser }) => {
           if (!timesObject) {
             setTimeList(AVAILABLE_TIMES);
             setBookingPerDayLimit(false);
+            setLoading(false)
             return;
           }
 
@@ -77,14 +73,14 @@ const BookingsBase = ({ firebase, authUser }) => {
           setTimeList(timeListToRender);
         });
     }
-  };
+    setLoading(false)
+  }, [date, firebase,checkUserBookingAmount, authUser.uid]);
+
   useEffect(() => {
-    setLoading(true);
     getSchedule();
-    setLoading(false);
 
     return () => firebase.bookTime().off();
-  }, [date]);
+  }, [date, firebase, getSchedule]);
 
   useEffect(() => {
     setDate(getDate);
@@ -118,11 +114,10 @@ const BookingsBase = ({ firebase, authUser }) => {
     <div>
       <TimeBooking authUser={authUser} syncedDate={date} setDate={setDate} />
 
-      {timeList && (
+      {timeList && !loading && (
         <Schedule
           syncedDate={date}
           timeList={timeList}
-          loading={loading}
           onSubmit={onSubmit}
           authUser={authUser}
           onDelete={onDelete}
@@ -130,6 +125,7 @@ const BookingsBase = ({ firebase, authUser }) => {
           bookingPerDayLimit={bookingPerDayLimit}
         />
       )}
+      {loading && <div>Loading...</div>}
     </div>
   );
 };

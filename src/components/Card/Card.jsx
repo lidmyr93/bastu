@@ -51,6 +51,99 @@ const BookingCard = ({
   const classes = useStyles();
   const handleDelete = () => onDelete(item.status.date);
 
+  const bookedTimeSelf = (item) => {
+    if (
+      item.status === Object(item.status) &&
+      item.status.user.uid === authUser.uid
+    ) {
+      return (
+        <div>
+          <Typography>Din tid</Typography>
+          <Button
+            variant="outlined"
+            color="secondary"
+            onClick={handleDelete}
+            size="large"
+          >
+            Avboka
+          </Button>
+        </div>
+      );
+    }
+    return null;
+  };
+
+  const bookedTime = (item) => {
+    if (item.status === Object(item.status) && item.status.user.uid !== authUser.uid) {
+      return (
+        <Typography>
+          Bokad av: {item.status.user.username}
+          {/* <span>{item.type}</span> */}
+        </Typography>
+      );
+    }
+    return null;
+  };
+
+  const userCanBook = (item) => {
+    if (
+      item.status !== Object(item.status) &&
+      item.type === "private" &&
+      bookingPerWeeksLimit < RULES.maxBookingAmount &&
+      !bookingPerDayLimit
+    ) {
+      return (
+        <Button
+          variant="outlined"
+          className={classes.button}
+          value={index}
+          onClick={(e) => handleClick(e)}
+          size="large"
+        >
+          Boka nu
+        </Button>
+      );
+    }
+    return null;
+  };
+  const reachedMaxBookingDuringTimePeroid = (item) => {
+    if (
+      item.status !== Object(item.status) &&
+      item.type === "private" &&
+      bookingPerWeeksLimit >= RULES.maxBookingAmount &&
+      !bookingPerDayLimit
+    ) {
+      return (
+        <Typography>
+          Max bokningar under tidsintervall: {RULES.timePeroidWeeks} veckor
+        </Typography>
+      );
+    }
+    return null;
+  };
+  const timeAlreadyBookedSameDay = (item) => {
+    if (
+      item.status !== Object(item.status) &&
+      item.type === "private" &&
+      bookingPerDayLimit
+    ) {
+      return (
+        <Typography>
+          Tid redan bokad för datumet, avboka tiden för att boka om
+        </Typography>
+      );
+    }
+    return null;
+  };
+
+  const NonBookableTime = (item) => {
+    if (item.status !== Object(item.status) && item.type === "general") {
+      return <Typography>Gemensam bastu</Typography>;
+    }
+    return null;
+  };
+
+
   return (
     <Card className={classes.root}>
       <CardMedia className={classes.cover} color="red">
@@ -60,70 +153,12 @@ const BookingCard = ({
       <Divider orientation="vertical" flexItem className={classes.divider} />
       <div className={classes.details}>
         <CardContent>
-          {/* The time is booked */}
-          {item.status === Object(item.status) && (
-            <>
-              {/* Is viewing self booked or not */}
-              {item.status.user.uid === authUser.uid ? (
-                <div>
-                  <Typography>Din tid</Typography>
-                  <Button
-                    variant="outlined"
-                    color="secondary"
-                    onClick={handleDelete}
-                    size="large"
-                  >
-                    Avboka
-                  </Button>
-                  {/* Viewing self in mybookings page */}
-                </div>
-              ) : (
-                <Typography>
-                  Bokad av: {item.status.user.username}
-                  {/* <span>{item.type}</span> */}
-                </Typography>
-              )}
-            </>
-          )}
-          {/* No Booked time on the slot */}
-          {/*  bookingPerDayLimit,
-            bookingPerWeeksLimit, */}
-          {item.status !== Object(item.status) &&
-            item.type === "private" &&
-            bookingPerWeeksLimit < RULES.maxBookingAmount &&
-            !bookingPerDayLimit && (
-              <Button
-                variant="outlined"
-                className={classes.button}
-                value={index}
-                onClick={(e) => handleClick(e)}
-                size="large"
-              >
-                Boka nu
-              </Button>
-            )}
-          {/* Max amount of bookings during time period  */}
-          {item.status !== Object(item.status) &&
-            item.type === "private" &&
-            bookingPerWeeksLimit >= RULES.maxBookingAmount &&
-            !bookingPerDayLimit && (
-              <Typography>
-                Max bokningar under tidsintervall: {RULES.timePeroidWeeks}{" "}
-                veckor
-              </Typography>
-            )}
-          {/* Max amount of booking on same date */}
-          {item.status !== Object(item.status) &&
-            item.type === "private" &&
-            bookingPerDayLimit && (
-              <Typography>
-                Tid redan bokad för datumet, avboka tiden för att boka om
-              </Typography>
-            )}{" "}
-          {/* NonBookableTime */}
-          {item.status !== Object(item.status) && item.type === "general" && (
-            <Typography>Gemensam bastu</Typography>
-          )}
+          {bookedTimeSelf(item)}
+          {bookedTime(item)}
+          {userCanBook(item)}
+          {reachedMaxBookingDuringTimePeroid(item)}
+          {timeAlreadyBookedSameDay(item)}
+          {NonBookableTime(item)}
         </CardContent>
       </div>
     </Card>

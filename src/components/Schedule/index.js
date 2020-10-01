@@ -36,7 +36,7 @@ const ScheduleBase = ({
             bookingPerDayLimit={bookingPerDayLimit}
           />
         ))}
-      {loading && <div>Loading....</div>}
+      
     </div>
   );
 };
