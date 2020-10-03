@@ -37,10 +37,10 @@ const BookingsBase = ({ firebase, authUser }) => {
       });
 
     return null;
-  }, [authUser.uid, firebase])
+  }, [authUser.uid, firebase]);
 
   const getSchedule = useCallback(async () => {
-    setLoading(true)
+    setLoading(true);
     if (date) {
       //Gets users total booking during a 2 week timespan from todays date
       checkUserBookingAmount();
@@ -51,7 +51,7 @@ const BookingsBase = ({ firebase, authUser }) => {
           if (!timesObject) {
             setTimeList(AVAILABLE_TIMES);
             setBookingPerDayLimit(false);
-            setLoading(false)
+            setLoading(false);
             return;
           }
 
@@ -73,8 +73,8 @@ const BookingsBase = ({ firebase, authUser }) => {
           setTimeList(timeListToRender);
         });
     }
-    setLoading(false)
-  }, [date, firebase,checkUserBookingAmount, authUser.uid]);
+    setLoading(false);
+  }, [date, firebase, checkUserBookingAmount, authUser.uid]);
 
   useEffect(() => {
     getSchedule();
@@ -88,6 +88,7 @@ const BookingsBase = ({ firebase, authUser }) => {
   }, []);
 
   const onSubmit = (time) => {
+    console.log(time);
     setLoading(true);
     firebase.bookTime().push({
       date: dateToTimestamp(date),
@@ -97,10 +98,13 @@ const BookingsBase = ({ firebase, authUser }) => {
     setLoading(false);
   };
 
-  const onDelete = (date) => {
+  const onDelete = (e) => {
+    const date = Number(e.currentTarget.value)
+    if(isNaN(date)) return;
     try {
       firebase.getTimesByDate(date).once("value", (snapshot) => {
         const timeObject = snapshot;
+        
         timeObject.forEach((child) => {
           if (child.val().user.uid === authUser.uid) child.ref.remove();
         });
