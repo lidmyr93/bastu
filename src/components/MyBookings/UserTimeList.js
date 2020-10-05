@@ -6,6 +6,7 @@ import {
   timestampToDate,
 } from "../../Utils/date";
 import BookingCard from "../Card/Card";
+import SkeletonCard from "../Card/SkeletonCard";
 
 import { withFirebase } from "../Firebase";
 
@@ -81,7 +82,7 @@ const UserTimeList = ({ firebase, authUser }) => {
         <Typography>Inga Tider</Typography>
       )}
 
-      {loading && <div>Loading</div>}
+      {loading && <SkeletonCard count={2} />}
     </div>
   );
 };

@@ -7,11 +7,12 @@ import { dateToTimestamp, getDate, getDatePeriod } from "../../Utils/date";
 import { withFirebase } from "../Firebase";
 import syncLocalTimeListToFirebase from "../../Utils/syncLocalTimeListToFirebase";
 import { AVAILABLE_TIMES } from "../../constants/times";
+import SkeletonCard from "../Card/SkeletonCard";
 
 const BookingsBase = ({ firebase, authUser }) => {
   const [date, setDate] = useState("");
   const [timeList, setTimeList] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   //true if booking on same day
   const [bookingPerDayLimit, setBookingPerDayLimit] = useState(false);
   //Int for tracking bookings during timespan
@@ -66,9 +67,10 @@ const BookingsBase = ({ firebase, authUser }) => {
           const userBookingAmountForDate = timesList.some(
             (time) => time.bookedBy === authUser.uid
           );
-          if (userBookingAmountForDate) {
-            setBookingPerDayLimit(true);
-          }
+
+          userBookingAmountForDate
+            ? setBookingPerDayLimit(true)
+            : setBookingPerDayLimit(false);
 
           setTimeList(timeListToRender);
         });
@@ -99,12 +101,12 @@ const BookingsBase = ({ firebase, authUser }) => {
   };
 
   const onDelete = (e) => {
-    const date = Number(e.currentTarget.value)
-    if(isNaN(date)) return;
+    const date = Number(e.currentTarget.value);
+    if (isNaN(date)) return;
     try {
       firebase.getTimesByDate(date).once("value", (snapshot) => {
         const timeObject = snapshot;
-        
+
         timeObject.forEach((child) => {
           if (child.val().user.uid === authUser.uid) child.ref.remove();
         });
@@ -129,7 +131,7 @@ const BookingsBase = ({ firebase, authUser }) => {
           bookingPerDayLimit={bookingPerDayLimit}
         />
       )}
-      {loading && <div>Loading...</div>}
+      {loading && <SkeletonCard count={9} />}
     </div>
   );
 };
