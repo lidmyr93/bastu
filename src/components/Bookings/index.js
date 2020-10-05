@@ -90,7 +90,6 @@ const BookingsBase = ({ firebase, authUser }) => {
   }, []);
 
   const onSubmit = (time) => {
-    console.log(time);
     setLoading(true);
     firebase.bookTime().push({
       date: dateToTimestamp(date),

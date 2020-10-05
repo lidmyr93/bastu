@@ -33,7 +33,9 @@ const UserTimeList = ({ firebase, authUser }) => {
       setLoading(false);
     });
   };
-  const onDelete = (date) => {
+  const onDelete = (e) => {
+    const date = Number(e.currentTarget.value);
+    if (isNaN(date)) return;
     try {
       firebase.getTimesByDate(date).once("value", (snapshot) => {
         const timeObject = snapshot;
@@ -79,10 +81,8 @@ const UserTimeList = ({ firebase, authUser }) => {
           />
         ))
       ) : (
-        <Typography>Inga Tider</Typography>
+        <SkeletonCard count={2} />
       )}
-
-      {loading && <SkeletonCard count={2} />}
     </div>
   );
 };
