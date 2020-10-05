@@ -1,132 +1,110 @@
 import React from "react";
-
 import { makeStyles } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
 import Typography from "@material-ui/core/Typography";
 import { Divider, Button } from "@material-ui/core";
-import { RULES } from "../../constants/rules";
-
-const useStyles = makeStyles((theme, props) => ({
-  root: {
+import { Link } from "react-router-dom";
+import { MY_BOOKINGS } from "../../constants/routes";
+const CardStyles = makeStyles((theme) => ({
+  root: ({ color }) => ({
     display: "flex",
     margin: "1rem 0",
     height: 150,
+    border: `1px solid ${color}`,
+    width: "100%",
+  }),
+  timeCardRoot: {
+    width: "40%",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  timeCard: {
+    boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
+    height: "70%",
+    width: "90%",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    flexDirection: "column",
   },
   details: {
+    width: "60%",
     display: "flex",
     flexDirection: "column",
+    justifyContent: "space-around",
     alignItems: "center",
-    justifyContent: "center",
-    width: "calc(100% - 101px)",
   },
-  content: {
-    flex: "1 0 auto",
-  },
-  cover: {
-    width: 100,
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  button: {
-    color: "green",
-  },
-  divider: {
-    height: "90%",
-    alignSelf: "center",
-  },
+  button: ({ buttonColor }) => ({
+    color: buttonColor,
+    border: `1px solid ${buttonColor}`,
+  }),
+  divider: { height: 140, marginTop: "5px" },
 }));
+
 const BookingCard = ({
-  item,
-  authUser,
-  onDelete,
-  handleClick,
+  startTime,
+  endTime,
   index,
-  bookingPerDayLimit,
-  bookingPerWeeksLimit,
+  onClick = false,
+  navigate,
+  header = "",
+  subHeader = false,
+  buttonText = "",
+  headerVariant = "h6",
+  subHeaderVariant = "h6",
+  color,
+  buttonColor,
 }) => {
-  const classes = useStyles();
-  const handleDelete = () => onDelete(item.status.date);
+  const classes = CardStyles({ color, buttonColor });
 
   return (
     <Card className={classes.root}>
-      <CardMedia className={classes.cover} color="red">
-        <Typography variant="h5">{item.startTime} -</Typography>
-        <Typography variant="h6"> {item.endTime}</Typography>
-      </CardMedia>
-      <Divider orientation="vertical" flexItem className={classes.divider} />
-      <div className={classes.details}>
-        <CardContent>
-          {/* The time is booked */}
-          {item.status === Object(item.status) && (
-            <>
-              {/* Is viewing self booked or not */}
-              {item.status.user.uid === authUser.uid ? (
-                <div>
-                  <Typography>Din tid</Typography>
-                  <Button
-                    variant="outlined"
-                    color="secondary"
-                    onClick={handleDelete}
-                    size="large"
-                  >
-                    Avboka
-                  </Button>
-                  {/* Viewing self in mybookings page */}
-                </div>
-              ) : (
-                <Typography>
-                  Bokad av: {item.status.user.username}
-                  {/* <span>{item.type}</span> */}
-                </Typography>
-              )}
-            </>
-          )}
-          {/* No Booked time on the slot */}
-          {/*  bookingPerDayLimit,
-            bookingPerWeeksLimit, */}
-          {item.status !== Object(item.status) &&
-            item.type === "private" &&
-            bookingPerWeeksLimit < RULES.maxBookingAmount &&
-            !bookingPerDayLimit && (
-              <Button
-                variant="outlined"
-                className={classes.button}
-                value={index}
-                onClick={(e) => handleClick(e)}
-                size="large"
-              >
-                Boka nu
-              </Button>
-            )}
-          {/* Max amount of bookings during time period  */}
-          {item.status !== Object(item.status) &&
-            item.type === "private" &&
-            bookingPerWeeksLimit >= RULES.maxBookingAmount &&
-            !bookingPerDayLimit && (
-              <Typography>
-                Max bokningar under tidsintervall: {RULES.timePeroidWeeks}{" "}
-                veckor
-              </Typography>
-            )}
-          {/* Max amount of booking on same date */}
-          {item.status !== Object(item.status) &&
-            item.type === "private" &&
-            bookingPerDayLimit && (
-              <Typography>
-                Tid redan bokad för datumet, avboka tiden för att boka om
-              </Typography>
-            )}{" "}
-          {/* NonBookableTime */}
-          {item.status !== Object(item.status) && item.type === "general" && (
-            <Typography>Gemensam bastu</Typography>
-          )}
-        </CardContent>
+      <div className={classes.timeCardRoot}>
+        <CardMedia className={classes.timeCard} color="red">
+          <Typography variant="h5">{startTime} -</Typography>
+          <Typography variant="h6"> {endTime}</Typography>
+        </CardMedia>
       </div>
+      <Divider orientation="vertical" flexItem className={classes.divider} />
+
+      <CardContent className={classes.details}>
+        <div>
+          <Typography variant={headerVariant} style={{ textAlign: "center" }}>
+            {header}
+          </Typography>
+          {subHeader && (
+            <Typography variant={subHeaderVariant}>{subHeader}</Typography>
+          )}
+        </div>
+        {onClick && (
+          <Button
+            variant="outlined"
+            className={classes.button}
+            value={index}
+            onClick={(e) => onClick(e)}
+            size="large"
+          >
+            {buttonText}
+          </Button>
+        )}
+        {navigate && (
+          <Link to={MY_BOOKINGS} style={{ textDecoration: "none" }}>
+            <Button
+              variant="contained"
+              className={classes.button}
+              size="medium"
+              color="primary"
+            >
+              Mina bokningar
+            </Button>
+          </Link>
+        )}
+      </CardContent>
     </Card>
   );
 };
+
 export default BookingCard;
