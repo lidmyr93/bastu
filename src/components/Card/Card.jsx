@@ -5,15 +5,16 @@ import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
 import Typography from "@material-ui/core/Typography";
 import { Divider, Button } from "@material-ui/core";
-
-const CardStyles = makeStyles((theme, props) => ({
-  root: {
+import { Link } from "react-router-dom";
+import { MY_BOOKINGS } from "../../constants/routes";
+const CardStyles = makeStyles((theme) => ({
+  root: ({ color }) => ({
     display: "flex",
     margin: "1rem 0",
     height: 150,
-    border: "1px solid green",
+    border: `1px solid ${color}`,
     width: "100%",
-  },
+  }),
   timeCardRoot: {
     width: "40%",
     display: "flex",
@@ -36,7 +37,10 @@ const CardStyles = makeStyles((theme, props) => ({
     justifyContent: "space-around",
     alignItems: "center",
   },
-  button: { color: "green" },
+  button: ({ buttonColor }) => ({
+    color: buttonColor,
+    border: `1px solid ${buttonColor}`,
+  }),
   divider: { height: 140, marginTop: "5px" },
 }));
 
@@ -45,14 +49,17 @@ const BookingCard = ({
   endTime,
   index,
   onClick = false,
+  navigate,
   header = "",
   subHeader = false,
   buttonText = "",
-  headerVariant="h6",
-  subHeaderVariant="h6"
+  headerVariant = "h6",
+  subHeaderVariant = "h6",
+  color,
+  buttonColor,
 }) => {
-  const classes = CardStyles();
-  
+  const classes = CardStyles({ color, buttonColor });
+
   return (
     <Card className={classes.root}>
       <div className={classes.timeCardRoot}>
@@ -62,27 +69,40 @@ const BookingCard = ({
         </CardMedia>
       </div>
       <Divider orientation="vertical" flexItem className={classes.divider} />
-      
-        <CardContent className={classes.details}>
-          <div>
+
+      <CardContent className={classes.details}>
+        <div>
           <Typography variant={headerVariant} style={{ textAlign: "center" }}>
             {header}
           </Typography>
-          {subHeader && <Typography variant={subHeaderVariant}>{subHeader}</Typography>}
-          </div>
-          {onClick && (
-            <Button
-              variant="outlined"
-              className={classes.button}
-              value={index}
-              onClick={(e) => onClick(e)}
-              size="large"
-            >
-              {buttonText}
-            </Button>
+          {subHeader && (
+            <Typography variant={subHeaderVariant}>{subHeader}</Typography>
           )}
-        </CardContent>
-      
+        </div>
+        {onClick && (
+          <Button
+            variant="outlined"
+            className={classes.button}
+            value={index}
+            onClick={(e) => onClick(e)}
+            size="large"
+          >
+            {buttonText}
+          </Button>
+        )}
+        {navigate && (
+          <Link to={MY_BOOKINGS} style={{ textDecoration: "none" }}>
+            <Button
+              variant="contained"
+              className={classes.button}
+              size="medium"
+              color="primary"
+            >
+              Mina bokningar
+            </Button>
+          </Link>
+        )}
+      </CardContent>
     </Card>
   );
 };

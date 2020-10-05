@@ -52,9 +52,9 @@ const ScheduleBase = ({
     bookingPerDayLimit,
     bookingPerWeeksLimit
   ) {
-    console.log("status",item.status !== Object(item.status))
-    console.log("type",item.type === "private");
-    console.log("perday",bookingPerDayLimit);
+    console.log("status", item.status !== Object(item.status));
+    console.log("type", item.type === "private");
+    console.log("perday", bookingPerDayLimit);
     console.log("perweek", bookingPerWeeksLimit >= RULES.maxBookingAmount);
     console.log("''''''''''''''''''''''''");
     if (
@@ -99,6 +99,8 @@ const ScheduleBase = ({
                 onClick={onDelete}
                 header="Din tid"
                 buttonText="Avboka"
+                color="blue"
+                buttonColor="red"
               />
             )}
             {bookedTime(item, authUser) && (
@@ -108,6 +110,7 @@ const ScheduleBase = ({
                 index={i}
                 header={`Bokad av: ${item.status.user.username}`}
                 subHeader={`Hus: ${item.status.user.houseNumber}`}
+                color="red"
               />
             )}
             {userCanBook(item, bookingPerWeeksLimit, bookingPerDayLimit) && (
@@ -118,6 +121,8 @@ const ScheduleBase = ({
                 onClick={handleClick}
                 header="Ledig tid"
                 buttonText="Boka nu"
+                color="green"
+                buttonColor="green"
               />
             )}
             {reachedMaxBookingDuringTimePeroid(
@@ -131,6 +136,8 @@ const ScheduleBase = ({
                 index={i}
                 header="Max bokningar för tids-intervall"
                 headerVariant="h6"
+                color="red"
+                navigate
               />
             )}
             {timeAlreadyBookedSameDay(item, bookingPerDayLimit) && (
@@ -139,6 +146,8 @@ const ScheduleBase = ({
                 endTime={item.endTime}
                 index={i}
                 header="Existerande bokning för dagen"
+                color="red"
+                navigate
               />
             )}
             {NonBookableTime(item) && (
@@ -147,6 +156,7 @@ const ScheduleBase = ({
                 endTime={item.endTime}
                 index={i}
                 header="Gemensam bastu"
+                color="green"
               />
             )}
           </>
