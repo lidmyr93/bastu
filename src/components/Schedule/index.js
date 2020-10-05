@@ -3,6 +3,7 @@ import { withFirebase } from "../Firebase";
 import { compose } from "recompose";
 import BookingCard from "../Card/Card";
 import { RULES } from "../../constants/rules";
+import { Box } from "@material-ui/core";
 
 const ScheduleBase = ({
   timeList,
@@ -52,11 +53,6 @@ const ScheduleBase = ({
     bookingPerDayLimit,
     bookingPerWeeksLimit
   ) {
-    console.log("status", item.status !== Object(item.status));
-    console.log("type", item.type === "private");
-    console.log("perday", bookingPerDayLimit);
-    console.log("perweek", bookingPerWeeksLimit >= RULES.maxBookingAmount);
-    console.log("''''''''''''''''''''''''");
     if (
       item.status !== Object(item.status) &&
       item.type === "private" &&
@@ -84,9 +80,7 @@ const ScheduleBase = ({
     return null;
   }
   return (
-    <div>
-      <p>Max 1 bokning per dag, för att byta tid , boka en ny ledig bastu</p>
-
+    <Box display="flex" flexDirection="column" mt="0.5rem">
       {!loading &&
         timeList &&
         timeList.map((item, i) => (
@@ -101,6 +95,7 @@ const ScheduleBase = ({
                 buttonText="Avboka"
                 color="blue"
                 buttonColor="red"
+                order="1"
               />
             )}
             {bookedTime(item, authUser) && (
@@ -161,7 +156,7 @@ const ScheduleBase = ({
             )}
           </>
         ))}
-    </div>
+    </Box>
   );
 };
 

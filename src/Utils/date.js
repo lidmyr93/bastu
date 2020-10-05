@@ -13,3 +13,5 @@ export const getDatePeriod = () => {
 
 export const dateToTimestamp = (date) => getUnixTime(new Date(date));
 export const timestampToDate = (timestamp) => fromUnixTime(timestamp);
+export const timeStampToFormattedDate = (timestamp) =>
+  formatISO(fromUnixTime(timestamp), { representation: "date" });

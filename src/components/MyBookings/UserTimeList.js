@@ -1,6 +1,12 @@
-import { Typography } from "@material-ui/core";
+import { Card, Typography } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
-import UserTimeCard from "../Card/UserTimeCard";
+import {
+  getDatePeriod,
+  dateToTimestamp,
+  timestampToDate,
+} from "../../Utils/date";
+import BookingCard from "../Card/Card";
+
 import { withFirebase } from "../Firebase";
 
 const UserTimeList = ({ firebase, authUser }) => {
@@ -21,7 +27,8 @@ const UserTimeList = ({ firebase, authUser }) => {
           bookingId: key,
         },
       }));
-      setUserTimes(list);
+      const sortedList = list.sort((a, b) => b.status.date - a.status.date);
+      setUserTimes(sortedList);
       setLoading(false);
     });
   };
@@ -37,6 +44,13 @@ const UserTimeList = ({ firebase, authUser }) => {
       console.error(err);
     }
   };
+  const checkTimeIsInTimeInterval = (timestamp) => {
+    const datePeriod = getDatePeriod();
+    return timestamp >= datePeriod.startDate && timestamp <= datePeriod.endDate
+      ? true
+      : false;
+  };
+
   useEffect(() => {
     getUserTimes();
 
@@ -49,10 +63,18 @@ const UserTimeList = ({ firebase, authUser }) => {
     <div>
       {!loading && userTimes ? (
         userTimes.map((item) => (
-          <UserTimeCard
-            item={item}
-            onDelete={onDelete}
-            key={item.status.date}
+          <BookingCard
+            startTime={item.status.time.startTime}
+            endTime={item.status.time.endTime}
+            index={item.status.date}
+            onClick={onDelete}
+            header="Din tid"
+            buttonText="Avboka"
+            color="blue"
+            buttonColor="red"
+            order="1"
+            showDate
+            activeTime={checkTimeIsInTimeInterval(item.status.date)}
           />
         ))
       ) : (
