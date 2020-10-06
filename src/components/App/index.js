@@ -12,6 +12,7 @@ import PasswordForgetPage from "../PasswordForget";
 import AccountPage from "../Account";
 import AdminPage from "../Admin";
 import { Container } from "@material-ui/core";
+import { Grid } from "../../styles/Grid";
 
 const App = (props) => {
   //props.authUser
@@ -20,19 +21,24 @@ const App = (props) => {
   return (
     <div>
       <Router>
-        <Navigation />
-        <Container maxWidth="sm">
-          <hr />
-          {/* <Route exact path={ROUTES.HOME} component={HomePage} /> */}
-          <Route exact path={ROUTES.BOOKINGS} component={Bookings} />
-          <Route path={ROUTES.SIGN_IN} component={SignInPage} />
-          <Route path={ROUTES.SIGN_UP} component={SignUpPage} />
-          <Route path={ROUTES.PASSWORD_FORGET} component={PasswordForgetPage} />
+        <Grid>
+          <Navigation />
+          <Container maxWidth="sm">
+            <hr />
+            {/* <Route exact path={ROUTES.HOME} component={HomePage} /> */}
+            <Route exact path={ROUTES.BOOKINGS} component={Bookings} />
+            <Route path={ROUTES.SIGN_IN} component={SignInPage} />
+            <Route path={ROUTES.SIGN_UP} component={SignUpPage} />
+            <Route
+              path={ROUTES.PASSWORD_FORGET}
+              component={PasswordForgetPage}
+            />
 
-          <Route path={ROUTES.MY_BOOKINGS} component={MyBookings} />
-          <Route path={ROUTES.ACCOUNT} component={AccountPage} />
-          <Route path={ROUTES.ADMIN} component={AdminPage} />
-        </Container>
+            <Route path={ROUTES.MY_BOOKINGS} component={MyBookings} />
+            <Route path={ROUTES.ACCOUNT} component={AccountPage} />
+            <Route path={ROUTES.ADMIN} component={AdminPage} />
+          </Container>
+        </Grid>
       </Router>
     </div>
   );
@@ -41,23 +47,11 @@ const App = (props) => {
 export default withAuthentication(App);
 
 //TODO:
-
+/* Critical, user can reset passwords for others :P */
 /* 
 Material UI:
 Backdrop - loading || Skeleton
 Snackbar error messages / success messages
 Avatar Icon for menu
-
-Skeleton from Material Lab
-But when it comes to other components, you may not want to repeat the width and height. 
-In these instances, you can pass children and it will infer its width and height from them.
-loading
-  ? <Skeleton><Avatar /></Skeleton>
-  : <Avatar src={data.avatar} />
-
-
-Firebase
-
-Rework userTimelist to not save more than 1 booking done on same day
 
 */

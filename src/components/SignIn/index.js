@@ -8,16 +8,30 @@ import * as ROUTES from "../../constants/routes";
 import { PasswordForgetLink } from "../PasswordForget";
 import CustomizedInput from "../Input/Input";
 import { Button } from "@material-ui/core";
-import { FlexContainer, FlexForm } from "../../styles/flex-container";
+import Box from "@material-ui/core/Box";
+import { FIREBASE_ERRORS } from "../../constants/firebase-errors";
+import CustomSnackbar from "../Snackbar/Snackbar";
 
 const SignInPage = () => (
-  <FlexContainer direction="column">
+  <Box
+    display="flex"
+    flexDirection="column"
+    alignItems="center"
+    justifyContent="space-evenly"
+    height="100%"
+  >
     <SignInForm />
-    <FlexContainer direction="column" align="flex-start" width="100%">
+    <Box
+      display="flex"
+      flexDirection="column"
+      alignItems="center"
+      justifyContent="center"
+      width="100%"
+    >
       <PasswordForgetLink />
       <SignUpLink />
-    </FlexContainer>
-  </FlexContainer>
+    </Box>
+  </Box>
 );
 
 const INITIAL_STATE = {
@@ -49,7 +63,10 @@ class SignInFormBase extends Component {
         this.props.history.push(ROUTES.HOME);
       })
       .catch((error) => {
-        this.setState({ error });
+        this.setState({
+          ...this.state,
+          error: { ...error, translatedMessage: FIREBASE_ERRORS[error.code] },
+        });
       });
 
     event.preventDefault();
@@ -65,13 +82,21 @@ class SignInFormBase extends Component {
     const isInvalid = password === "" || email === "";
 
     return (
-      <FlexForm onSubmit={this.onSubmit}>
+      <Box
+        component="form"
+        onSubmit={this.onSubmit}
+        display="flex"
+        flexDirection="column"
+        alignItems="center"
+        justifyContent="center"
+        width="75%"
+      >
         <CustomizedInput
           name="email"
           value={email}
           onChange={this.onChange}
           type="text"
-          placeholder="Email address"
+          placeholder="Email"
         />
         <CustomizedInput
           name="password"
@@ -80,7 +105,6 @@ class SignInFormBase extends Component {
           type="password"
           placeholder="Password"
         />
-
         <Button
           disabled={isInvalid}
           type="submit"
@@ -90,9 +114,13 @@ class SignInFormBase extends Component {
         >
           Sign In
         </Button>
-
-        {error && <p>{error.message}</p>}
-      </FlexForm>
+        {error && (
+          <CustomSnackbar
+            message={error.translatedMessage || error.message}
+            severity="error"
+          />
+        )}
+      </Box>
     );
   }
 }

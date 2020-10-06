@@ -4,19 +4,25 @@ import { withFirebase } from "../Firebase";
 import { Link, withRouter } from "react-router-dom";
 import * as ROUTES from "../../constants/routes";
 import CustomizedInput from "../Input/Input";
-import { Button } from "@material-ui/core";
-import { FlexForm, FlexContainer } from "../../styles/flex-container";
+import { Button, Typography } from "@material-ui/core";
 import { debounce } from "../../Utils/debounce";
 import { RULES } from "../../constants/rules";
 import { HOUSE_NUMBERS } from "../../constants/house-numbers";
 import * as ROLES from "../../constants/roles";
+import Box from "@material-ui/core/Box";
+import { FIREBASE_ERRORS } from "../../constants/firebase-errors";
+import CustomSnackbar from "../Snackbar/Snackbar";
 
 const SignUpPage = () => (
-  <FlexContainer direction="column">
-    <h1>SignUp</h1>
-
+  <Box
+    display="flex"
+    flexDirection="column"
+    alignItems="center"
+    justifyContent="center"
+  >
+    <Typography variant="h4">Skapa konto</Typography>
     <SignUpForm />
-  </FlexContainer>
+  </Box>
 );
 const INITIAL_STATE = {
   username: "",
@@ -81,7 +87,14 @@ class SignUpFormBase extends Component {
             this.props.history.push(ROUTES.HOME);
           })
           .catch((error) => {
-            this.setState({ error });
+            console.log(error);
+            this.setState({
+              ...this.state,
+              error: {
+                ...error,
+                translatedMessage: FIREBASE_ERRORS[error.code],
+              },
+            });
           });
       } catch (error) {
         this.setState({ error });
@@ -117,7 +130,15 @@ class SignUpFormBase extends Component {
       email === "" ||
       username === "";
     return (
-      <FlexForm onSubmit={this.onSubmit}>
+      <Box
+        component="form"
+        onSubmit={this.onSubmit}
+        display="flex"
+        flexDirection="column"
+        alignItems="center"
+        justifyContent="center"
+        width="75%"
+      >
         {" "}
         <CustomizedInput
           name="username"
@@ -152,7 +173,7 @@ class SignUpFormBase extends Component {
           value={passwordTwo}
           onChange={this.onChange}
           type="password"
-          placeholder="Confirm Password"
+          placeholder="Bekräfta Password"
         />
         <Button
           disabled={isInvalid}
@@ -161,17 +182,27 @@ class SignUpFormBase extends Component {
           variant="contained"
           fullWidth
         >
-          Sign Up
+          Skapa konto
         </Button>
-        {error && <p>{error.message}</p>}
-      </FlexForm>
+        {error && (
+          <CustomSnackbar
+            message={error.translatedMessage || error.message}
+            severity="error"
+          />
+        )}
+      </Box>
     );
   }
 }
 
 const SignUpLink = () => (
   <p>
-    Don't have an account? <Link to={ROUTES.SIGN_UP}>Sign Up</Link>
+    Skapa konto{" "}
+    <Button color="primary">
+      <Link to={ROUTES.SIGN_UP} style={{ textDecoration: "none" }}>
+        Sign Up
+      </Link>
+    </Button>
   </p>
 );
 

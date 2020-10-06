@@ -3,17 +3,24 @@ import React from "react";
 import { PasswordForgetForm } from "../PasswordForget";
 import PasswordChangeForm from "../PasswordChange";
 import { withAuthorization, AuthUserContext } from "../Session";
-import { FlexContainer } from "../../styles/flex-container";
+import Box from "@material-ui/core/Box";
+import { Divider, Typography } from "@material-ui/core";
 const AccountPage = () => (
   <AuthUserContext.Consumer>
     {(authUser) => (
-      <FlexContainer direction="column">
-        <h1>Account Page</h1>
-        <h3>Reset password</h3>
+      <Box
+        display="flex"
+        flexDirection="column"
+        justifyContent="center"
+        alignItems="center"
+      >
+        <Typography variant="h4">Mitt konto</Typography>
+
+        <Typography variant="h6">Återställ lösenord</Typography>
         <PasswordForgetForm />
-        <h3>Byt lösenord</h3>
+        <Typography variant="h6">Byt lösenord</Typography>
         <PasswordChangeForm />
-      </FlexContainer>
+      </Box>
     )}
   </AuthUserContext.Consumer>
 );

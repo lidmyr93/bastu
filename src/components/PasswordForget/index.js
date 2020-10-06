@@ -3,15 +3,18 @@ import { Link } from "react-router-dom";
 
 import { withFirebase } from "../Firebase";
 import * as ROUTES from "../../constants/routes";
-import { FlexContainer, FlexForm } from "../../styles/flex-container";
+
 import { Button } from "@material-ui/core";
 import CustomizedInput from "../Input/Input";
+import Box from "@material-ui/core/Box";
+import CustomSnackbar from "../Snackbar/Snackbar";
+import { FIREBASE_ERRORS } from "../../constants/firebase-errors";
 
 const PasswordForgetPage = () => (
-  <FlexContainer direction="column">
+  <Box display="flex" flexDirection="column">
     <h1>PasswordForget</h1>
     <PasswordForgetForm />
-  </FlexContainer>
+  </Box>
 );
 
 const INITIAL_STATE = {
@@ -35,7 +38,10 @@ class PasswordForgetFormBase extends Component {
         this.setState({ ...INITIAL_STATE });
       })
       .catch((error) => {
-        this.setState({ error });
+        this.setState({
+          ...this.state,
+          error: { ...error, translatedMessage: FIREBASE_ERRORS[error.code] },
+        });
       });
 
     event.preventDefault();
@@ -51,13 +57,21 @@ class PasswordForgetFormBase extends Component {
     const isInvalid = email === "";
 
     return (
-      <FlexForm onSubmit={this.onSubmit}>
+      <Box
+        component="form"
+        onSubmit={this.onSubmit}
+        display="flex"
+        flexDirection="column"
+        alignItems="center"
+        justifyContent="center"
+        width="75%"
+      >
         <CustomizedInput
           name="email"
           value={this.state.email}
           onChange={this.onChange}
           type="text"
-          placeholder="Email Address"
+          placeholder="Email"
         />
         <Button
           disabled={isInvalid}
@@ -66,19 +80,26 @@ class PasswordForgetFormBase extends Component {
           variant="contained"
           fullWidth
         >
-          Reset My Password
+          Återställ mitt Lösenord
         </Button>
 
-        {error && <p>{error.message}</p>}
-      </FlexForm>
+        {error && (
+          <CustomSnackbar
+            message={error.translatedMessage || error.message}
+            severity="error"
+          />
+        )}
+      </Box>
     );
   }
 }
 
 const PasswordForgetLink = () => (
-  <p>
-    <Link to={ROUTES.PASSWORD_FORGET}>Forgot Password?</Link>
-  </p>
+  <Button color="primary">
+    <Link to={ROUTES.PASSWORD_FORGET} style={{ textDecoration: "none" }}>
+      Glömt lösenord?
+    </Link>
+  </Button>
 );
 
 export default PasswordForgetPage;

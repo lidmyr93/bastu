@@ -1,9 +1,11 @@
 import React, { Component } from "react";
 
 import { withFirebase } from "../Firebase";
-import { FlexForm } from "../../styles/flex-container";
+import Box from "@material-ui/core/Box";
 import CustomizedInput from "../Input/Input";
 import { Button } from "@material-ui/core";
+import CustomSnackbar from "../Snackbar/Snackbar";
+import { FIREBASE_ERRORS } from "../../constants/firebase-errors";
 
 const INITIAL_STATE = {
   passwordOne: "",
@@ -27,7 +29,10 @@ class PasswordChangeForm extends Component {
         this.setState({ ...INITIAL_STATE });
       })
       .catch((error) => {
-        this.setState({ error });
+        this.setState({
+          ...this.state,
+          error: { ...error, translatedMessage: FIREBASE_ERRORS[error.code] },
+        });
       });
 
     event.preventDefault();
@@ -43,27 +48,46 @@ class PasswordChangeForm extends Component {
     const isInvalid = passwordOne !== passwordTwo || passwordOne === "";
 
     return (
-      <FlexForm onSubmit={this.onSubmit}>
+      <Box
+        component="form"
+        onSubmit={this.onSubmit}
+        display="flex"
+        flexDirection="column"
+        alignItems="center"
+        justifyContent="center"
+        width="75%"
+      >
         <CustomizedInput
           name="passwordOne"
           value={passwordOne}
           onChange={this.onChange}
           type="password"
-          placeholder="New Password"
+          placeholder="Nytt password"
         />
         <CustomizedInput
           name="passwordTwo"
           value={passwordTwo}
           onChange={this.onChange}
           type="password"
-          placeholder="Confirm New Password"
+          placeholder="Bekräfta nytt Password"
         />
-        <Button disabled={isInvalid} type="submit" color="primary" variant="contained" fullWidth>
-          Reset My Password
+        <Button
+          disabled={isInvalid}
+          type="submit"
+          color="primary"
+          variant="contained"
+          fullWidth
+        >
+          Återställ mitt lösenord
         </Button>
 
-        {error && <p>{error.message}</p>}
-      </FlexForm>
+        {error && (
+          <CustomSnackbar
+            message={error.translatedMessage || error.message}
+            severity="error"
+          />
+        )}
+      </Box>
     );
   }
 }
