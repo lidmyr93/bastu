@@ -1,0 +1,13 @@
+{
+  "rules": {
+    "booking": {
+      ".read": "auth  != null",
+      ".write": "auth  != null",
+      ".indexOn": ["date"]
+    },
+    "users": {
+      ".read": "auth  != null",
+      ".write": "true"
+    }
+  }
+}
