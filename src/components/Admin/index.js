@@ -67,11 +67,10 @@ class AdminPage extends Component {
     const { users, loading } = this.state;
     return (
       <div>
-        <h1>Admin</h1>
-
         {loading && <div>Loading...</div>}
         <UserList users={users} />
         <Box component="form" onSubmit={this.handleSubmit}>
+          <label>Lägg till admin rättigheter</label>
           <input type="email" onChange={this.handleChange} />
           <input type="submit" />
         </Box>

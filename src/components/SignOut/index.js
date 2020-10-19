@@ -1,6 +1,7 @@
 import React from "react";
 
 import { withFirebase } from "../Firebase";
+import { Button } from "@material-ui/core";
 
 const SignOutButton = ({ firebase }) => {
   const logout = () => {
@@ -8,9 +9,10 @@ const SignOutButton = ({ firebase }) => {
     firebase.doSignOut();
   };
   return (
-    <button type="button" onClick={logout}>
-      Sign Out
-    </button>
+    <Button type="button" variant="text" color="secondary" size="medium" onClick={logout}>
+      Logga ut
+    </Button>
+    
   );
 };
 

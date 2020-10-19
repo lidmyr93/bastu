@@ -23,8 +23,8 @@ const App = (props) => {
       <Router>
         <Grid>
           <Navigation />
-          <Container maxWidth="sm">
-            <hr />
+          <Container maxWidth="sm" >
+
             {/* <Route exact path={ROUTES.HOME} component={HomePage} /> */}
             <Route exact path={ROUTES.BOOKINGS} component={Bookings} />
             <Route path={ROUTES.SIGN_IN} component={SignInPage} />

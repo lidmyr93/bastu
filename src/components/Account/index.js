@@ -4,7 +4,7 @@ import { PasswordForgetForm } from "../PasswordForget";
 import PasswordChangeForm from "../PasswordChange";
 import { withAuthorization, AuthUserContext } from "../Session";
 import Box from "@material-ui/core/Box";
-import { Divider, Typography } from "@material-ui/core";
+import { Typography } from "@material-ui/core";
 const AccountPage = () => (
   <AuthUserContext.Consumer>
     {(authUser) => (

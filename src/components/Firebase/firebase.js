@@ -14,7 +14,6 @@ const config = {
 
 class Firebase {
   constructor() {
-    /* this.app = app.initializeApp(config).functions("europe-west1"); */
     this.app = app.initializeApp(config);
     this.auth = app.auth();
     this.db = app.database();
@@ -28,17 +27,18 @@ class Firebase {
           .then(async (snapshot) => {
             const dbUser = snapshot.val();
 
-            if (!dbUser.roles) {
-              dbUser.roles = {};
-            }
             const isAdmin = await this.isAdmin();
-            console.log(isAdmin);
+            if (isAdmin) {
+              dbUser.roles = {ADMIN : "ADMIN"}
+            }
+            else{
+              dbUser.roles = {USER: "USER"}
+            }
             authUser = {
               uid: authUser.uid,
               email: authUser.email,
               ...dbUser,
             };
-
             next(authUser);
           });
       } else {
@@ -89,3 +89,4 @@ class Firebase {
     this.db.ref("users").orderByChild("houseNumber").equalTo(houseNumber);
 }
 export default Firebase;
+ 

@@ -24,6 +24,7 @@ import {
   Autorenew,
   CalendarToday,
   Security,
+  KeyboardReturn
 } from "@material-ui/icons";
 
 const drawerWidth = 240;
@@ -48,6 +49,9 @@ const useStyles = makeStyles((theme) => ({
   toggleContainer: {
     marginRight: "1rem",
   },
+  paddingRight: {
+    paddingRight: "8px",
+  }
 }));
 
 const Navigation = () => {
@@ -119,50 +123,60 @@ const Navigation = () => {
   );
 };
 const NavigationAuth = ({ authUser, classes, handleDrawerClose }) => (
+  
   <>
     <List>
+    <Link to={ROUTES.BOOKINGS} style={{textDecoration: "none"}}>
       <ListItem button onClick={handleDrawerClose}>
-        <ListItemIcon>
+        <ListItemIcon className={classes.paddingRight}>
           <Schedule />
         </ListItemIcon>
         <ListItemText>
-          <Link to={ROUTES.BOOKINGS}>Boka tid</Link>
+          Boka tid
         </ListItemText>
       </ListItem>
+      </Link>
+      <Link to={ROUTES.MY_BOOKINGS} style={{textDecoration: "none"}}>
       <ListItem button onClick={handleDrawerClose}>
-        <ListItemIcon>
+        <ListItemIcon className={classes.paddingRight}>
           <CalendarToday />
         </ListItemIcon>
         <ListItemText>
-          <Link to={ROUTES.MY_BOOKINGS}>Mina Tider</Link>
+          Mina Tider
         </ListItemText>
       </ListItem>
+      </Link>
+
+      <Link to={ROUTES.ACCOUNT} style={{textDecoration: "none"}}>
       <ListItem button onClick={handleDrawerClose}>
-        <ListItemIcon>
+        <ListItemIcon className={classes.paddingRight}>
           <AccountCircle />
         </ListItemIcon>
         <ListItemText>
-          <Link to={ROUTES.ACCOUNT}>Konto</Link>
+          Konto
         </ListItemText>
       </ListItem>
+      </Link>
 
       {!!authUser.roles[ROLES.ADMIN] && (
         <>
           <Divider />
+          <Link to={ROUTES.ADMIN} style={{textDecoration: "none"}}>
           <ListItem button onClick={handleDrawerClose}>
-            <ListItemIcon>
+            <ListItemIcon className={classes.paddingRight}>
               <Security />
             </ListItemIcon>
             <ListItemText>
-              <Link to={ROUTES.ADMIN}>Admin</Link>
+              Admin
             </ListItemText>
           </ListItem>
+          </Link>
         </>
       )}
 
       <Divider />
       <ListItem button onClick={handleDrawerClose}>
-        <ListItemIcon></ListItemIcon>
+        <ListItemIcon><KeyboardReturn /></ListItemIcon>
         <ListItemText>
           <SignOut />
         </ListItemText>
@@ -171,25 +185,28 @@ const NavigationAuth = ({ authUser, classes, handleDrawerClose }) => (
   </>
 );
 
-const NavigationNonAuth = ({ handleDrawerClose }) => (
+const NavigationNonAuth = ({ handleDrawerClose, classes }) => (
   <List>
+    <Link to={ROUTES.SIGN_IN} style={{textDecoration: "none"}}>
     <ListItem button onClick={handleDrawerClose}>
-      <ListItemIcon>
+      <ListItemIcon className={classes.paddingRight}>
         <KeyboardTab />
       </ListItemIcon>
       <ListItemText>
-        <Link to={ROUTES.SIGN_IN}>Sign In</Link>
+        Logga in
       </ListItemText>
     </ListItem>
-
+    </Link>
+    <Link to={ROUTES.PASSWORD_FORGET} style={{textDecoration: "none"}}>
     <ListItem button onClick={handleDrawerClose}>
-      <ListItemIcon>
+      <ListItemIcon className={classes.paddingRight}>
         <Autorenew />
       </ListItemIcon>
       <ListItemText>
-        <Link to={ROUTES.PASSWORD_FORGET}>Password forget</Link>
+        Glömt lösenord
       </ListItemText>
     </ListItem>
+    </Link>
   </List>
 );
 

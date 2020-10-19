@@ -7,6 +7,7 @@ import { withFirebase } from "../Firebase";
 import { withRouter } from "react-router-dom";
 import { formatISO } from "date-fns";
 import { getDatePeriod, timestampToDate } from "../../Utils/date";
+import { Button } from "@material-ui/core";
 
 const TimeBookingBase = ({ syncedDate, setDate }) => {
   const onDateChange = (date) =>
@@ -19,6 +20,7 @@ const TimeBookingBase = ({ syncedDate, setDate }) => {
         flexDirection: "column",
         width: "250px",
         margin: "0 auto",
+        position: "relative",
       }}
     >
       <MuiPickersUtilsProvider utils={DateFnsUtils} locale={sv}>
@@ -33,6 +35,9 @@ const TimeBookingBase = ({ syncedDate, setDate }) => {
           maxDate={timestampToDate(getDatePeriod().endDate)}
         />
       </MuiPickersUtilsProvider>
+      <Button variant="outlined" size="small" style={{ position: "absolute", right: 0, zIndex: "-10" }}>
+        Välj datum
+      </Button>
     </div>
   );
 };
