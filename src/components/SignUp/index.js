@@ -197,10 +197,9 @@ class SignUpFormBase extends Component {
 
 const SignUpLink = () => (
   <p>
-    Skapa konto{" "}
     <Button color="primary">
       <Link to={ROUTES.SIGN_UP} style={{ textDecoration: "none" }}>
-        Sign Up
+        Skapa konto
       </Link>
     </Button>
   </p>

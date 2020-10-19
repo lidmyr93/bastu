@@ -1,6 +1,7 @@
 import app from "firebase/app";
 import "firebase/auth";
 import "firebase/database";
+import "firebase/functions";
 
 const config = {
   apiKey: process.env.REACT_APP_API_KEY,
@@ -13,22 +14,25 @@ const config = {
 
 class Firebase {
   constructor() {
-    app.initializeApp(config);
-
+    /* this.app = app.initializeApp(config).functions("europe-west1"); */
+    this.app = app.initializeApp(config);
     this.auth = app.auth();
     this.db = app.database();
+    this.functions = app.functions();
   }
   onAuthUserListener = (next, fallback) =>
-    this.auth.onAuthStateChanged((authUser) => {
+    this.auth.onAuthStateChanged(async (authUser) => {
       if (authUser) {
         this.user(authUser.uid)
           .once("value")
-          .then((snapshot) => {
+          .then(async (snapshot) => {
             const dbUser = snapshot.val();
+
             if (!dbUser.roles) {
               dbUser.roles = {};
             }
-
+            const isAdmin = await this.isAdmin();
+            console.log(isAdmin);
             authUser = {
               uid: authUser.uid,
               email: authUser.email,
@@ -41,6 +45,14 @@ class Firebase {
         fallback();
       }
     });
+
+  isAdmin = async () => {
+    //TOD: make this return false if not admin
+    const claimsObject = await this.auth.currentUser.getIdTokenResult();
+
+    return claimsObject.claims.admin;
+  };
+
   doCreateUserWithEmailAndPassword = (email, password) =>
     this.auth.createUserWithEmailAndPassword(email, password);
 
@@ -76,5 +88,4 @@ class Firebase {
   checkHouseAccountAmount = (houseNumber) =>
     this.db.ref("users").orderByChild("houseNumber").equalTo(houseNumber);
 }
-
 export default Firebase;
