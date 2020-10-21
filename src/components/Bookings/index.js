@@ -13,6 +13,7 @@ const BookingsBase = ({ firebase, authUser }) => {
   const [date, setDate] = useState("");
   const [timeList, setTimeList] = useState(null);
   const [loading, setLoading] = useState(true);
+
   //true if booking on same day
   const [bookingPerDayLimit, setBookingPerDayLimit] = useState(false);
   //Int for tracking bookings during timespan
@@ -95,6 +96,7 @@ const BookingsBase = ({ firebase, authUser }) => {
       date: dateToTimestamp(date),
       time: time,
       user: authUser,
+      wantCompany: false,
     });
     setLoading(false);
   };

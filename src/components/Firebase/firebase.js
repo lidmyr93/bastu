@@ -29,10 +29,9 @@ class Firebase {
 
             const isAdmin = await this.isAdmin();
             if (isAdmin) {
-              dbUser.roles = {ADMIN : "ADMIN"}
-            }
-            else{
-              dbUser.roles = {USER: "USER"}
+              dbUser.roles = { ADMIN: "ADMIN" };
+            } else {
+              dbUser.roles = { USER: "USER" };
             }
             authUser = {
               uid: authUser.uid,
@@ -89,4 +88,3 @@ class Firebase {
     this.db.ref("users").orderByChild("houseNumber").equalTo(houseNumber);
 }
 export default Firebase;
- 

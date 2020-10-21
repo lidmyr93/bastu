@@ -96,6 +96,8 @@ const ScheduleBase = ({
                 color="blue"
                 buttonColor="red"
                 order="1"
+                viewingSelf
+                wantCompany={item.status.wantCompany}
               />
             )}
             {bookedTime(item, authUser) && (
@@ -105,6 +107,7 @@ const ScheduleBase = ({
                 index={i}
                 header={`Bokad av: ${item.status.user.username}`}
                 subHeader={`Hus: ${item.status.user.houseNumber}`}
+                wantCompany={item.status.wantCompany}
                 color="red"
               />
             )}

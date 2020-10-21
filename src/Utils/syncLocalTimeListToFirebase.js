@@ -21,3 +21,5 @@ export default syncLocalTimeListToFirebase;
 
 //TODO: Look over for a more optimal solution, alternative move this
 //to a firebase function for cleaner frontend
+// Oneway could be to create all times in firebase when user changes to
+// a date that hasn´t been visited yet
