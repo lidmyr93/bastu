@@ -84,7 +84,7 @@ const ScheduleBase = ({
       {!loading &&
         timeList &&
         timeList.map((item, i) => (
-          <>
+          <div key={item.startTime}>
             {bookedTimeSelf(item, authUser) && (
               <BookingCard
                 startTime={item.startTime}
@@ -157,7 +157,7 @@ const ScheduleBase = ({
                 color="green"
               />
             )}
-          </>
+          </div>
         ))}
     </Box>
   );

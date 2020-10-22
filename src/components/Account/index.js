@@ -17,7 +17,7 @@ const AccountPage = () => (
         <Typography variant="h4">Mitt konto</Typography>
 
         <Typography variant="h6">Återställ lösenord</Typography>
-        <PasswordForgetForm />
+        <PasswordForgetForm authUser={authUser} />
         <Typography variant="h6">Byt lösenord</Typography>
         <PasswordChangeForm />
       </Box>

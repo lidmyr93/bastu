@@ -1,13 +1,11 @@
-export const debounce = (func, wait) => {
-  let timeout;
-
-  return function (args) {
-    const later = () => {
-      clearTimeout(timeout);
-      func(args);
-    };
-
-    clearTimeout(timeout);
-    timeout = setTimeout(later, wait);
+export const debounce = (callback, time) => {
+  let interval;
+  console.log("called");
+  return (...args) => {
+    clearTimeout(interval);
+    interval = setTimeout(() => {
+      interval = null;
+      callback(...args);
+    }, time);
   };
 };

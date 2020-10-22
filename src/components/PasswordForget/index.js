@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { withFirebase } from "../Firebase";
 import * as ROUTES from "../../constants/routes";
 
-import { Button } from "@material-ui/core";
+import { Button, debounce } from "@material-ui/core";
 import CustomizedInput from "../Input/Input";
 import Box from "@material-ui/core/Box";
 import CustomSnackbar from "../Snackbar/Snackbar";
@@ -30,9 +30,20 @@ class PasswordForgetFormBase extends Component {
   }
 
   onSubmit = (event) => {
+    event.preventDefault();
     const { email } = this.state;
-
-    this.props.firebase
+    const { firebase, authUser } = this.props;
+    console.log(email);
+    console.log(authUser.email);
+    if (email !== authUser.email) {
+      this.setState({
+        ...this.state,
+        error: { translatedMessage: "Felaktig mailadress" },
+      });
+      this.clearError();
+      return;
+    }
+    firebase
       .doPasswordReset(email)
       .then(() => {
         this.setState({ ...INITIAL_STATE });
@@ -43,9 +54,11 @@ class PasswordForgetFormBase extends Component {
           error: { ...error, translatedMessage: FIREBASE_ERRORS[error.code] },
         });
       });
-
-    event.preventDefault();
   };
+
+  clearError = debounce(() => {
+    this.setState(INITIAL_STATE);
+  }, 3000);
 
   onChange = (event) => {
     this.setState({ [event.target.name]: event.target.value });

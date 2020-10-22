@@ -1,9 +1,5 @@
-
 import React, { useEffect, useState } from "react";
-import {
-  getDatePeriod,
-  
-} from "../../Utils/date";
+import { getDatePeriod } from "../../Utils/date";
 import BookingCard from "../Card/Card";
 import SkeletonCard from "../Card/SkeletonCard";
 
@@ -77,6 +73,8 @@ const UserTimeList = ({ firebase, authUser }) => {
             order="1"
             showDate
             activeTime={checkTimeIsInTimeInterval(item.status.date)}
+            viewingSelf
+            wantCompany={item.status.wantCompany}
           />
         ))
       ) : (

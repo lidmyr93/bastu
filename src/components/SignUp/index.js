@@ -42,32 +42,34 @@ class SignUpFormBase extends Component {
   }
 
   checkHouseAccountAmount = debounce((houseNumber) => {
-  
-     //check if house exists
+    //check if house exists
     const houseExists = HOUSE_NUMBERS.find(
       (element) => element === Number(houseNumber)
     );
+
     !houseExists
       ? this.setState({ ...this.state, error: { message: "Hus finns inte" } })
-      : this.setState({ ...this.state, error: null })  
-    
-      if(houseExists){
+      : this.setState({ ...this.state, error: null });
 
-       this.props.firebase
+    if (houseExists) {
+      this.props.firebase
         .checkHouseAccountAmount(houseNumber)
         .on("value", (snapshot) => {
           const data = snapshot.val();
-          console.log(data)
+
           if (!data) return this.setState({ ...this.state, accountAmount: 0 });
           const array = Object.keys(data).map((key) => data[key]);
 
-          if(array.length >= RULES.maxAccountsPerHouse){
-            return this.setState({...this.state, error: {message: "För många konton per hus"}})
+          if (array.length >= RULES.maxAccountsPerHouse) {
+            return this.setState({
+              ...this.state,
+              error: { message: "För många konton per hus" },
+            });
           }
 
           return this.setState({ ...this.state, accountAmount: array.length });
         });
-      }
+    }
     return this.setState({ ...this.state, accountAmount: 0 });
   }, 1000);
 
@@ -138,7 +140,8 @@ class SignUpFormBase extends Component {
       passwordOne !== passwordTwo ||
       passwordOne === "" ||
       email === "" ||
-      username === "" || this.state.error;
+      username === "" ||
+      this.state.error;
     return (
       <Box
         component="form"
