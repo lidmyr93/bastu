@@ -33,8 +33,6 @@ class PasswordForgetFormBase extends Component {
     event.preventDefault();
     const { email } = this.state;
     const { firebase, authUser } = this.props;
-    console.log(email);
-    console.log(authUser.email);
     if (email !== authUser.email) {
       this.setState({
         ...this.state,
