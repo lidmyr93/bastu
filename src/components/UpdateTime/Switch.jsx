@@ -21,14 +21,13 @@ const UpdateTimeBase = ({ firebase, authUser, timeToUpdate, checked }) => {
 
   const upDateWantCompany = (time, authUser) => {
     setDisabled(true);
-    console.log("halllås");
+
     const date = Number(time);
     if (isNaN(date)) return;
     try {
       firebase.getTimesByDate(date).once("value", (snapshot) => {
         snapshot.forEach((child) => {
           const data = child.val();
-          console.log(data);
           if (data.user.uid === authUser.uid && data.date === date)
             child.ref.update({ ...data, wantCompany: !data.wantCompany });
         });

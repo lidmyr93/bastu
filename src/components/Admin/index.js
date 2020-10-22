@@ -57,6 +57,7 @@ class AdminPage extends Component {
       "addAdminRole"
     );
     addAdminRole({ email: this.state.email }).then((result) => {
+      //TODO: Add snackbar with verification
       console.log(result);
     });
   };

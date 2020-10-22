@@ -99,7 +99,7 @@ class SignUpFormBase extends Component {
             this.props.history.push(ROUTES.HOME);
           })
           .catch((error) => {
-            console.log(error);
+            console.error(error);
             this.setState({
               ...this.state,
               error: {
