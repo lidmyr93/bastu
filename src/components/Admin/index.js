@@ -55,22 +55,23 @@ class AdminPage extends Component {
   }
   handleSubmit = (e) => {
     e.preventDefault();
-    /*  const addAdminRole = this.props.firebase.functions.httpsCallable(
+
+    const addAdminRole = this.props.firebase.functions.httpsCallable(
       "addAdminRole"
     );
     addAdminRole({ email: this.state.email }).then((result) => {
       //TODO: Add snackbar with verification
       console.log(result);
-    }); */
+    });
 
     /* const test = this.props.firebase.functions.httpsCallable(
       "addBookingsForTesting"
     ); */
-    const test = this.props.firebase.functions.httpsCallable(
+    /* const test = this.props.firebase.functions.httpsCallable(
       "testScheduledDeleteOldBookings"
-    );
+    ); */
 
-    test().then((result) => console.log(result));
+    /* test().then((result) => console.log(result)); */
   };
   handleChange = (e) => {
     this.setState({ ...this.state, email: e.target.value });

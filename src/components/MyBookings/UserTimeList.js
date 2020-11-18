@@ -1,14 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
+
 import { getDatePeriod } from "../../Utils/date";
 import BookingCard from "../Card/Card";
 import SkeletonCard from "../Card/SkeletonCard";
-
 import { withFirebase } from "../Firebase";
 
 const UserTimeList = ({ firebase, authUser }) => {
   const [userTimes, setUserTimes] = useState(null);
   const [loading, setLoading] = useState(false);
-  const getUserTimes = () => {
+
+  const getUserTimes = useCallback(() => {
     setLoading(true);
     firebase.getUserTimes(authUser.uid).on("value", (snapshot) => {
       const data = snapshot.val();
@@ -27,7 +28,8 @@ const UserTimeList = ({ firebase, authUser }) => {
       setUserTimes(sortedList);
       setLoading(false);
     });
-  };
+  }, [authUser.uid, firebase]);
+
   const onDelete = (e) => {
     const date = Number(e.currentTarget.value);
     if (isNaN(date)) return;
@@ -52,13 +54,11 @@ const UserTimeList = ({ firebase, authUser }) => {
   useEffect(() => {
     getUserTimes();
 
-    //TODO: Look into calling query methods for different scenarios in the get functions
-    //instead on the refs , looks weird to call off on the "base listener"
     return () => firebase.bookTime().off();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [authUser]);
+  }, [authUser, firebase, getUserTimes]);
+
   return (
-    <div>
+    <div style={{ marginTop: "1rem" }}>
       {!loading && userTimes ? (
         userTimes.map((item) => (
           <BookingCard

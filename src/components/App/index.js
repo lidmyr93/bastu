@@ -11,20 +11,26 @@ import { withAuthentication } from "../Session";
 import PasswordForgetPage from "../PasswordForget";
 import AccountPage from "../Account";
 import AdminPage from "../Admin";
-import { Container } from "@material-ui/core";
+import { Container, makeStyles } from "@material-ui/core";
 import { Grid } from "../../styles/Grid";
 
+const ContainerStyles = makeStyles((theme) => ({
+  container: {
+    paddingRight: "6px",
+    paddingLeft: "6px",
+  },
+}));
 const App = (props) => {
   //props.authUser
   //TODO: Investigate rendering diff routes depening on logged in or not
   // rootpage sign in logged out and bookings logged in
+  const classes = ContainerStyles();
   return (
     <div>
       <Router>
         <Grid>
           <Navigation />
-          <Container maxWidth="sm" >
-
+          <Container maxWidth="sm" className={classes.container}>
             {/* <Route exact path={ROUTES.HOME} component={HomePage} /> */}
             <Route exact path={ROUTES.BOOKINGS} component={Bookings} />
             <Route path={ROUTES.SIGN_IN} component={SignInPage} />
@@ -47,7 +53,7 @@ const App = (props) => {
 export default withAuthentication(App);
 
 //TODO:
-/* Critical, user can reset passwords for others :P */
+/* Critical, user can reset passwords for others */
 /* 
 Material UI:
 Backdrop - loading || Skeleton

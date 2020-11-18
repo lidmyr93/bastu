@@ -3,17 +3,19 @@
   "description": "Cloud Functions for Firebase",
   "scripts": {
     "lint": "eslint .",
-    "serve": "firebase emulators:start --only functions",
+    "serve": "firebase emulators:start --only functions --inspect-functions",
     "shell": "firebase functions:shell",
     "start": "npm run shell",
     "deploy": "firebase deploy --only functions",
-    "logs": "firebase functions:log"
+    "logs": "firebase functions:log",
+    "debug": "functions-framework --target=testScheduledDeleteOldBookings"
   },
   "engines": {
     "node": "10"
   },
   "main": "index.js",
   "dependencies": {
+    "@google-cloud/functions-framework": "^1.7.1",
     "cors": "^2.8.5",
     "date-fns": "^2.16.1",
     "firebase-admin": "^8.10.0",

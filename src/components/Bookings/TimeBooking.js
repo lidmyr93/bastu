@@ -7,7 +7,44 @@ import { withFirebase } from "../Firebase";
 import { withRouter } from "react-router-dom";
 import { formatISO } from "date-fns";
 import { getDatePeriod, timestampToDate } from "../../Utils/date";
-import { Button } from "@material-ui/core";
+import { Button, createMuiTheme } from "@material-ui/core";
+import { indigo, red } from "@material-ui/core/colors";
+import { ThemeProvider } from "@material-ui/styles";
+
+const materialTheme = createMuiTheme({
+  overrides: {
+    MuiPickersToolbar: {
+      toolbar: {
+        backgroundColor: indigo["500"],
+      },
+    },
+    MuiPickersCalendarHeader: {
+      switchHeader: {
+        // backgroundColor: lightBlue.A200,
+        // color: "white",
+      },
+    },
+    MuiPickersDay: {
+      day: {
+        color: "#000",
+      },
+      daySelected: {
+        backgroundColor: indigo["500"],
+      },
+      dayDisabled: {
+        color: red["400"],
+      },
+      current: {
+        color: indigo["500"],
+      },
+    },
+    MuiPickersModal: {
+      dialogAction: {
+        backgroundColor: "#000",
+      },
+    },
+  },
+});
 
 const TimeBookingBase = ({ syncedDate, setDate }) => {
   const onDateChange = (date) =>
@@ -24,18 +61,24 @@ const TimeBookingBase = ({ syncedDate, setDate }) => {
       }}
     >
       <MuiPickersUtilsProvider utils={DateFnsUtils} locale={sv}>
-        <DatePicker
-          orientation="portrait"
-          variant="dialog"
-          openTo="date"
-          inputVariant="standard"
-          value={syncedDate}
-          onChange={onDateChange}
-          disablePast={true}
-          maxDate={timestampToDate(getDatePeriod().endDate)}
-        />
+        <ThemeProvider theme={materialTheme}>
+          <DatePicker
+            orientation="portrait"
+            variant="dialog"
+            openTo="date"
+            inputVariant="standard"
+            value={syncedDate}
+            onChange={onDateChange}
+            disablePast={true}
+            maxDate={timestampToDate(getDatePeriod().endDate)}
+          />
+        </ThemeProvider>
       </MuiPickersUtilsProvider>
-      <Button variant="outlined" size="small" style={{ position: "absolute", right: 0, zIndex: "-10" }}>
+      <Button
+        variant="outlined"
+        size="small"
+        style={{ position: "absolute", right: 0, zIndex: "-10" }}
+      >
         Välj datum
       </Button>
     </div>

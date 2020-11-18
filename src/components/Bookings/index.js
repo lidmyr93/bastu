@@ -8,12 +8,19 @@ import { withFirebase } from "../Firebase";
 import syncLocalTimeListToFirebase from "../../Utils/syncLocalTimeListToFirebase";
 import { AVAILABLE_TIMES } from "../../constants/times";
 import SkeletonCard from "../Card/SkeletonCard";
+import { Container, makeStyles } from "@material-ui/core";
 
+const ContainerStyles = makeStyles((theme) => ({
+  container: {
+    padding: 0,
+    margin: "1rem 0 0 0",
+  },
+}));
 const BookingsBase = ({ firebase, authUser }) => {
   const [date, setDate] = useState("");
   const [timeList, setTimeList] = useState(null);
   const [loading, setLoading] = useState(true);
-
+  const classes = ContainerStyles();
   //true if booking on same day
   const [bookingPerDayLimit, setBookingPerDayLimit] = useState(false);
   //Int for tracking bookings during timespan
@@ -118,7 +125,7 @@ const BookingsBase = ({ firebase, authUser }) => {
   };
 
   return (
-    <div>
+    <Container className={classes.container}>
       <TimeBooking authUser={authUser} syncedDate={date} setDate={setDate} />
 
       {timeList && !loading && (
@@ -133,7 +140,7 @@ const BookingsBase = ({ firebase, authUser }) => {
         />
       )}
       {loading && <SkeletonCard count={9} />}
-    </div>
+    </Container>
   );
 };
 

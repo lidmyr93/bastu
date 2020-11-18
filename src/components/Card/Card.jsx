@@ -9,6 +9,7 @@ import { Link } from "react-router-dom";
 import { MY_BOOKINGS } from "../../constants/routes";
 import { timeStampToFormattedDate } from "../../Utils/date";
 import UpdateTime from "../UpdateTime/Switch";
+
 const CardStyles = makeStyles((theme) => ({
   root: ({ color, order, activeTime }) => ({
     display: "flex",
@@ -37,8 +38,12 @@ const CardStyles = makeStyles((theme) => ({
     width: "60%",
     display: "flex",
     flexDirection: "column",
-    justifyContent: activeTime ? "space-around" : "",
+    justifyContent: activeTime ? "center" : "center",
     alignItems: "center",
+    padding: "8px",
+    "&:last-child": {
+      paddingBottom: "8px",
+    },
   }),
   button: ({ buttonColor }) => ({
     color: buttonColor,
@@ -86,7 +91,7 @@ const BookingCard = ({
             component="div"
             container
             alignItems="center"
-            justify="space-between"
+            justify="center"
             direction="row"
             width="100%"
           >

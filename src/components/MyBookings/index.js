@@ -6,11 +6,7 @@ import UserTimeList from "./UserTimeList";
 const MyBookingsPage = () => {
   return (
     <AuthUserContext.Consumer>
-      {(authUser) => (
-        <div>
-          <UserTimeList authUser={authUser} />
-        </div>
-      )}
+      {(authUser) => <UserTimeList authUser={authUser} />}
     </AuthUserContext.Consumer>
   );
 };
