@@ -13,6 +13,8 @@ import AccountPage from "../Account";
 import AdminPage from "../Admin";
 import { Container, makeStyles } from "@material-ui/core";
 import { Grid } from "../../styles/Grid";
+import { ThemeProvider } from "styled-components";
+import Theme from "../../Theme/Theme";
 
 const ContainerStyles = makeStyles((theme) => ({
   container: {
@@ -20,7 +22,7 @@ const ContainerStyles = makeStyles((theme) => ({
     paddingLeft: "6px",
   },
 }));
-const App = (props) => {
+const App = () => {
   //props.authUser
   //TODO: Investigate rendering diff routes depening on logged in or not
   // rootpage sign in logged out and bookings logged in
@@ -28,23 +30,25 @@ const App = (props) => {
   return (
     <div>
       <Router>
-        <Grid>
-          <Navigation />
-          <Container maxWidth="sm" className={classes.container}>
-            {/* <Route exact path={ROUTES.HOME} component={HomePage} /> */}
-            <Route exact path={ROUTES.BOOKINGS} component={Bookings} />
-            <Route path={ROUTES.SIGN_IN} component={SignInPage} />
-            <Route path={ROUTES.SIGN_UP} component={SignUpPage} />
-            <Route
-              path={ROUTES.PASSWORD_FORGET}
-              component={PasswordForgetPage}
-            />
+        <ThemeProvider theme={Theme}>
+          <Grid className="app-layout">
+            <Navigation />
+            <Container maxWidth="sm" className={classes.container}>
+              {/* <Route exact path={ROUTES.HOME} component={HomePage} /> */}
+              <Route exact path={ROUTES.BOOKINGS} component={Bookings} />
+              <Route path={ROUTES.SIGN_IN} component={SignInPage} />
+              <Route path={ROUTES.SIGN_UP} component={SignUpPage} />
+              <Route
+                path={ROUTES.PASSWORD_FORGET}
+                component={PasswordForgetPage}
+              />
 
-            <Route path={ROUTES.MY_BOOKINGS} component={MyBookings} />
-            <Route path={ROUTES.ACCOUNT} component={AccountPage} />
-            <Route path={ROUTES.ADMIN} component={AdminPage} />
-          </Container>
-        </Grid>
+              <Route path={ROUTES.MY_BOOKINGS} component={MyBookings} />
+              <Route path={ROUTES.ACCOUNT} component={AccountPage} />
+              <Route path={ROUTES.ADMIN} component={AdminPage} />
+            </Container>
+          </Grid>
+        </ThemeProvider>
       </Router>
     </div>
   );

@@ -1,11 +1,10 @@
-import React, { Component } from "react";
-
+import React from "react";
 import { withFirebase } from "../Firebase";
 import Box from "@material-ui/core/Box";
 import CustomizedInput from "../Input/Input";
-import { Button } from "@material-ui/core";
 import CustomSnackbar from "../Snackbar/Snackbar";
 import { FIREBASE_ERRORS } from "../../constants/firebase-errors";
+import { StyledButton } from "../../styles/Button";
 
 const INITIAL_STATE = {
   passwordOne: "",
@@ -13,7 +12,7 @@ const INITIAL_STATE = {
   error: null,
 };
 
-class PasswordChangeForm extends Component {
+class PasswordChangeForm extends React.Component {
   constructor(props) {
     super(props);
 
@@ -71,15 +70,16 @@ class PasswordChangeForm extends Component {
           type="password"
           placeholder="Bekräfta nytt Password"
         />
-        <Button
+        <StyledButton
           disabled={isInvalid}
           type="submit"
           color="primary"
           variant="contained"
           fullWidth
+          fontSize="0.75rem"
         >
           Återställ mitt lösenord
-        </Button>
+        </StyledButton>
 
         {error && (
           <CustomSnackbar

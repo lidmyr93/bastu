@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 
 import { withFirebase } from "../Firebase";
@@ -9,6 +9,7 @@ import CustomizedInput from "../Input/Input";
 import Box from "@material-ui/core/Box";
 import CustomSnackbar from "../Snackbar/Snackbar";
 import { FIREBASE_ERRORS } from "../../constants/firebase-errors";
+import { StyledButton } from "../../styles/Button";
 
 const PasswordForgetPage = () => (
   <Box display="flex" flexDirection="column">
@@ -22,7 +23,7 @@ const INITIAL_STATE = {
   error: null,
 };
 
-class PasswordForgetFormBase extends Component {
+class PasswordForgetFormBase extends React.Component {
   constructor(props) {
     super(props);
 
@@ -84,15 +85,17 @@ class PasswordForgetFormBase extends Component {
           type="text"
           placeholder="Email"
         />
-        <Button
+        <StyledButton
           disabled={isInvalid}
           type="submit"
           color="primary"
           variant="contained"
           fullWidth
+          size="medium"
+          fontSize="0.75rem"
         >
           Återställ mitt Lösenord
-        </Button>
+        </StyledButton>
 
         {error && (
           <CustomSnackbar

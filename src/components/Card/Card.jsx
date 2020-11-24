@@ -1,56 +1,13 @@
 import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import Card from "@material-ui/core/Card";
-import CardContent from "@material-ui/core/CardContent";
-import CardMedia from "@material-ui/core/CardMedia";
+
 import Typography from "@material-ui/core/Typography";
-import { Divider, Button, Grid } from "@material-ui/core";
+import { Divider, Grid } from "@material-ui/core";
 import { Link } from "react-router-dom";
 import { MY_BOOKINGS } from "../../constants/routes";
 import { timeStampToFormattedDate } from "../../Utils/date";
 import UpdateTime from "../UpdateTime/Switch";
-
-const CardStyles = makeStyles((theme) => ({
-  root: ({ color, order, activeTime }) => ({
-    display: "flex",
-    margin: "0.25rem auto",
-    height: activeTime ? 150 : 50,
-    border: activeTime ? `1px solid ${color}` : "none",
-    width: "100%",
-    order: order,
-  }),
-  timeCardRoot: {
-    width: "40%",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  timeCard: ({ activeTime }) => ({
-    boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
-    height: "70%",
-    width: "90%",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    flexDirection: activeTime ? "column" : "initial",
-  }),
-  details: ({ activeTime }) => ({
-    width: "60%",
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: activeTime ? "center" : "center",
-    alignItems: "center",
-    padding: "8px",
-    "&:last-child": {
-      paddingBottom: "8px",
-    },
-  }),
-  button: ({ buttonColor }) => ({
-    color: buttonColor,
-    border: `1px solid ${buttonColor}`,
-  }),
-  divider: { height: 140, marginTop: "5px" },
-}));
+import { StyledCard, StyledCardMedia, StyledCardContent } from "./Card.Styles";
+import { StyledButton } from "../../styles/Button";
 
 const BookingCard = ({
   startTime,
@@ -71,21 +28,19 @@ const BookingCard = ({
   buttonColor,
   order = 2,
 }) => {
-  const classes = CardStyles({ color, buttonColor, order, activeTime });
-
   return (
-    <Card className={classes.root}>
-      <div className={classes.timeCardRoot}>
-        <CardMedia className={classes.timeCard} color="red">
+    <StyledCard activeTime={activeTime} order={order} color={color}>
+      <div className={"cardInfo"}>
+        <StyledCardMedia activeTime={activeTime}>
           <Typography variant={activeTime ? "h5" : "p"}>
             {startTime} -
           </Typography>
           <Typography variant={activeTime ? "h6" : "p"}> {endTime}</Typography>
-        </CardMedia>
+        </StyledCardMedia>
       </div>
-      <Divider orientation="vertical" flexItem className={classes.divider} />
+      <Divider orientation="vertical" flexItem />
 
-      <CardContent className={classes.details}>
+      <StyledCardContent activeTime={activeTime}>
         {activeTime ? (
           <Grid
             component="div"
@@ -113,26 +68,25 @@ const BookingCard = ({
                 )}
               </div>
               {onClick && (
-                <Button
+                <StyledButton
                   variant="outlined"
-                  className={classes.button}
                   value={index}
                   onClick={(e) => onClick(e)}
                   size="large"
+                  color={buttonColor}
                 >
                   {buttonText}
-                </Button>
+                </StyledButton>
               )}
               {navigate && (
                 <Link to={MY_BOOKINGS} style={{ textDecoration: "none" }}>
-                  <Button
+                  <StyledButton
                     variant="contained"
-                    className={classes.button}
                     size="medium"
                     color="primary"
                   >
                     Mina bokningar
-                  </Button>
+                  </StyledButton>
                 </Link>
               )}
             </div>
@@ -147,8 +101,8 @@ const BookingCard = ({
             )}
           </div>
         )}
-      </CardContent>
-    </Card>
+      </StyledCardContent>
+    </StyledCard>
   );
 };
 

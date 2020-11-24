@@ -93,8 +93,8 @@ const ScheduleBase = ({
                 onClick={onDelete}
                 header="Din tid"
                 buttonText="Avboka"
-                color="blue"
-                buttonColor="red"
+                color="primary"
+                buttonColor="danger"
                 order="1"
                 viewingSelf
                 wantCompany={item.status.wantCompany}
@@ -108,7 +108,7 @@ const ScheduleBase = ({
                 header={`Bokad av: ${item.status.user.username}`}
                 subHeader={`Hus: ${item.status.user.houseNumber}`}
                 wantCompany={item.status.wantCompany}
-                color="red"
+                color="booked"
               />
             )}
             {userCanBook(item, bookingPerWeeksLimit, bookingPerDayLimit) && (
@@ -119,8 +119,8 @@ const ScheduleBase = ({
                 onClick={handleClick}
                 header="Ledig tid"
                 buttonText="Boka nu"
-                color="green"
-                buttonColor="green"
+                color="success"
+                buttonColor="success"
               />
             )}
             {reachedMaxBookingDuringTimePeroid(
@@ -134,7 +134,7 @@ const ScheduleBase = ({
                 index={i}
                 header="Max bokningar för tids-intervall"
                 headerVariant="h6"
-                color="red"
+                color="booked"
                 navigate
               />
             )}
@@ -144,7 +144,7 @@ const ScheduleBase = ({
                 endTime={item.endTime}
                 index={i}
                 header="Existerande bokning för dagen"
-                color="red"
+                color="booked"
                 navigate
               />
             )}
@@ -154,7 +154,7 @@ const ScheduleBase = ({
                 endTime={item.endTime}
                 index={i}
                 header="Gemensam bastu"
-                color="green"
+                color="success"
               />
             )}
           </div>
